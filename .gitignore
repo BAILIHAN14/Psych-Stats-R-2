@@ -1,0 +1,204 @@
+# ================================
+# 本 .gitignore 文件的作用：
+# 只忽略临时文件、缓存、日志、系统垃圾等。
+# 重要文件（.Rmd .html .png .xlsx .sav）不会被忽略。
+# ================================
+
+# ========== R / RStudio 相关 ==========
+# R 会话历史文件（每次运行R都会产生，不要提交）
+.Rhistory
+.Rapp.history
+
+# R 工作空间（保存的变量/数据，巨大且无意义）
+.RData
+.RDataTmp
+
+# R 用户设置（个人偏好，不要共享）
+.Ruserdata
+
+# RStudio 项目内部配置文件夹（自动生成，每个用户不同）
+.Rproj.user/
+
+# RStudio 项目文件（.Rproj 文件本身可以提交，但如果你不想提交也可以取消注释）
+# *.Rproj
+
+# R 包编译产生的临时文件
+.Rbuildignore
+.Rcheck/
+
+# R 包构建时的输出
+*.Rcheck/
+*.tar.gz
+
+# R 笔记本（Rmd 编译时生成的临时 md 文件，不是最终输出）
+*.md
+*.knit.md
+
+# R 帮助文件缓存
+*.rdb
+*.rdx
+*.rdata
+
+# R 包文档（如果你在写包，忽略这些）
+/man/
+/vignettes/*.pdf
+
+# ========== R Markdown / 编译输出 ==========
+# 注意：.Rmd 和 .html 是重要文件，不会被忽略！
+# 但编译时产生的中间文件需要忽略。
+
+# Rmd 编译时产生的临时文件夹
+_cache/
+_figure/
+_files/
+_site/
+
+# Bookdown 相关临时文件
+_bookdown_files/
+_bookdown.yml
+
+# blogdown 相关
+/public/
+/static/
+
+# ========== Python（如果混用） ==========
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python/
+pip-log.txt
+pip-delete-this-directory.txt
+.eggs/
+*.egg-info/
+*.egg
+
+# ========== Jupyter Notebook（如果有） ==========
+.ipynb_checkpoints/
+*.ipynb
+
+# ========== 版本控制 / Git 相关 ==========
+
+
+# 忽略 Git 补丁文件
+*.patch
+*.diff
+
+# ========== 编辑器 / IDE 相关 ==========
+# VS Code
+.vscode/
+*.code-workspace
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+
+# RStudio（上面已经有了，补充一些）
+.Rproj.user/
+.Rproj.d/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim / Neovim
+*.swp
+*.swo
+*~
+.*.swp
+.*.swo
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# JetBrains (R语言插件等)
+.idea/
+*.iml
+
+# ========== 操作系统垃圾文件 ==========
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+.AppleDB
+.AppleDesktop
+
+# Linux
+*~
+.directory
+.dovecot*
+*.pid
+*.lock
+
+# ========== 日志 / 临时文件 ==========
+*.log
+*.tmp
+*.temp
+*.cache
+*.bak
+*.backup
+*.old
+*.orig
+*.rej
+
+# ========== 数据文件（只忽略某些不重要的临时数据） ==========
+
+*.feather
+*.parquet
+*.rds
+*.rda
+*.Rds
+
+# Excel 临时文件
+~$*.xlsx
+~$*.xls
+
+# 压缩包临时文件
+*.zip
+*.7z
+*.rar
+*.gz
+*.bz2
+*.xz
+
+# ========== 输出目录==========
+
+# output/
+temp/
+tmp/
+
+# ========== 其它 ==========
+# 网络缓存
+.cache/
+.mypy_cache/
+
+# 数据库文件
+*.db
+*.sqlite
+*.sqlite3
+
+# Docker 相关
+Dockerfile
+.dockerignore
+*.docker
+
+# 环境变量文件
+.env
+.env.*
+*.secret
