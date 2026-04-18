@@ -5,44 +5,45 @@
 # ================================
 
 # ========== R / RStudio 相关 ==========
-# R 会话历史文件（每次运行R都会产生，不要提交）
+# R/RStudio 临时文件
 .Rhistory
-.Rapp.history
-
-# R 工作空间（保存的变量/数据，巨大且无意义）
 .RData
-.RDataTmp
-
-# R 用户设置（个人偏好，不要共享）
+.Rproj.user/
+.Rproj
 .Ruserdata
 
-# RStudio 项目内部配置文件夹（自动生成，每个用户不同）
-.Rproj.user/
+# 缓存和临时文件
+*.Rcache
+*.Rcheck
+*.Rproj.user
+*.Rproj
+*.Rhistory
+*.RData
 
-# RStudio 项目文件（.Rproj 文件本身可以提交，但如果你不想提交也可以取消注释）
-# *.Rproj
+# IDE 配置文件
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# R 包编译产生的临时文件
-.Rbuildignore
-.Rcheck/
+# 操作系统文件
+.DS_Store
+Thumbs.db
 
-# R 包构建时的输出
-*.Rcheck/
-*.tar.gz
+# 编译生成的文件
+*.o
+*.so
+*.dll
 
-# R 笔记本（Rmd 编译时生成的临时 md 文件，不是最终输出）
-*.md
-*.knit.md
-
-# R 帮助文件缓存
-*.rdb
-*.rdx
-*.rdata
-
-# R 包文档（如果你在写包，忽略这些）
-/man/
-/vignettes/*.pdf
-
+# 其他临时文件
+cache/
+figure/
+autosave/
+*.bak
+*.tmp
 # ========== R Markdown / 编译输出 ==========
 # 注意：.Rmd 和 .html 是重要文件，不会被忽略！
 # 但编译时产生的中间文件需要忽略。
