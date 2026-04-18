@@ -52,8 +52,8 @@ Psych-Stats-R-2/
 
 ### 文件组成
 - PsychSta-2.Rmd为主要的文件，请使用Rstudio打开。默认以visual模式打开。涵盖了统计学方法、r语言函数等内容。有可以运行的r的代码块，运行代码块前请清空工作台。有大纲分类，但排版可能会比较的简陋。
-- PsychSta-2.html 为html格式文件，内容与.Rmd文件内容一致。排版更加清晰美观，添加了可以自动跳转的目录，也是有运行出来编进去的运行结果。
-- 其余的文件为.Rmd运行所需要的文件，只是需要注意将这些文件和.Rmd文件放在同一文件夹下。
+- PsychSta-2.html 为.html格式文件，内容与.Rmd文件内容一致。排版更加清晰美观，添加了可以自动跳转的目录，也是有运行出来编进去的运行结果。
+- 其余的文件为.Rmd运行所需要的文件。
 
 
 
@@ -67,6 +67,7 @@ Psych-Stats-R-2/
 
 ### 在线查看
 
+点击下方查看网页版
 [![View HTML Document](https://img.shields.io/badge/View_Live-HTML-0072C6?style=for-the-badge&logo=html5)](https://bailihan14.github.io/Psych-Stats-R-2/PsychSta-2.html)
 
 ## 致谢
