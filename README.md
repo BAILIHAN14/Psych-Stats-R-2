@@ -66,8 +66,8 @@ Psych-Stats-R-2/
 
 
 ### 在线查看
-- **HTML 文档：** [PsychSta-2.html](docs/PsychSta-2.html)
-- **直接在 GitHub 上浏览：** 点击 `docs/PsychSta-2.html` 文件
+
+[![View HTML Document](https://img.shields.io/badge/View_Live-HTML-0072C6?style=for-the-badge&logo=html5)](https://bailihan14.github.io/Psych-Stats-R-2/PsychSta-2.html)
 
 ## 致谢
 感谢26春心理统计2的李健老师;感谢2026春-心理统计2-三教403的助教老师们，他们为我提供了宝贵的参考数据，尤其感谢张嘉欣助教老师，她解答了我整理文档时面临的困惑；感谢deepseek，没它我学不会git,latex,r还有各种各样的小玩意;感谢江一平同学，没他的提醒我会忘了收拾仓库。
