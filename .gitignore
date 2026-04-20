@@ -203,10 +203,3 @@ Dockerfile
 .env.*
 *.secret
 
-# 数据文件、图片、外部资源不计入语言统计
-data/*.sav linguist-vendored
-data/*.xlsx linguist-vendored
-docs/images/*.png linguist-vendored
-docs/images/*.jpg linguist-vendored
-*.css linguist-vendored=false
-*.html linguist-documentation
