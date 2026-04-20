@@ -1,0 +1,313 @@
+@media (max-width: 768px) {
+  body { font-size: 15px; }/*适配移动客户端*/
+  h1 { font-size: 2em; }
+  pre { font-size: 13px; padding: 0.8em; }
+  table { font-size: 0.85em; }
+  .doc-header h1 { font-size: 2.2em; }
+}
+.cover-page {
+  text-align: center;
+  padding: 3rem 1rem 2rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(145deg, #f8fafc 0%, #ffffff 80%);
+  border-radius: 24px;
+  border: 1px solid #e2e8f0;
+}
+.cover-title {
+  font-size: 3.2em;
+  font-weight: 700;
+  color: #1a252f;
+  letter-spacing: -0.5px;
+  margin-bottom: 0.3em;
+}
+.cover-subtitle {
+  font-size: 1.3em;
+  color: #5d6d7e;
+  font-weight: 400;
+  margin-bottom: 1.5em;
+}
+.cover-meta span {
+  margin: 0 15px;
+  color: #2c3e50;
+  background: #ecf0f1;
+  padding: 5px 15px;
+  border-radius: 30px;
+  font-size: 0.9em;
+}
+.cover-divider {
+  width: 100px;
+  margin: 2rem auto;
+  border-top: 3px solid #bdc3c7;
+}
+.cover-quote {
+  font-style: italic;
+  color: #7f8c8d;
+  font-size: 1.1em;
+}
+/* ==================== 全局基础与版式 ==================== */
+body {
+  /* 字体栈：优先使用现代系统字体，确保在不同平台都有良好显示效果，最后回退到通用字体族 */
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", "Noto Sans", sans-serif;
+  line-height: 1.7;              /* 增加行高，大幅提升阅读舒适度 */
+  color: #2c3e50;                /* 深灰蓝色，比纯黑更柔和、高级 */
+  background-color: #ffffff;     /* 保持干净的白色背景，这是最护眼且经典的阅读界面 */
+  font-weight: 400;
+  font-size: 16px;               /* 适中的基础字号 */
+}
+
+/* 标题系统：建立清晰的层级感 */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: #1a252f;                /* 标题颜色更深，突出层次 */
+  margin-top: 1.8em;
+  margin-bottom: 0.8em;
+  line-height: 1.3;
+}
+
+h1 {
+  font-size: 2.5em;
+  font-weight: 700;
+  border-bottom: 3px solid #3498db; /* 为一级标题添加底部边框，增加设计感 */
+  padding-bottom: 0.3em;
+  margin-top: 1.2em;
+}
+
+h2 {
+  font-size: 2em;
+  border-bottom: 1px solid #bdc3c7; /* 二级标题边框更细，体现层级 */
+  padding-bottom: 0.2em;
+}
+
+h3 {
+  font-size: 1.5em;
+}
+
+/* 链接样式 */
+a {
+  color: #2980b9;                 /* 优雅的蓝色 */
+  text-decoration: none;          /* 去除下划线，更清爽 */
+  transition: color 0.2s ease;    /* 添加颜色过渡效果 */
+}
+
+a:hover {
+  color: #1a5276;                 /* 悬停时颜色加深 */
+  text-decoration: underline;     /* 悬停时出现下划线 */
+}
+
+/* 段落与列表间距 */
+p {
+  margin-bottom: 1.2em;
+}
+
+ul, ol {
+  margin-bottom: 1.2em;
+  padding-left: 2em;
+}
+
+li {
+  margin-bottom: 0.3em;
+}
+
+/* ==================== 代码块与行内代码 ==================== */
+/* 行内代码 */
+code {
+  font-family: "Fira Code", "Cascadia Code", "Consolas", "Monaco", monospace;
+  font-size: 0.9em;
+  padding: 0.2em 0.4em;
+  color: #c7254e;                 /* 优雅的酒红色，与正文形成对比 */
+  background-color: #f9f2f4;      /* 极浅的粉色背景，清晰但不刺眼 */
+  border-radius: 6px;             /* 圆角 */
+}
+
+/* 代码块容器 */
+pre {
+  font-family: "Fira Code", "Cascadia Code", "Consolas", "Monaco", monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  border-radius: 8px;             /* 圆角 */
+  border: 1px solid #e1e8ed;      /* 添加细边框，让代码块更立体 */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03); /* 极其 subtle 的阴影，增加高级感 */
+  margin: 1.5em 0;
+  padding: 1.2em;
+  background-color: #fdfefe;      /* 保持代码块背景接近白色，与内容区融合 */
+  overflow-x: auto;               /* 处理过长的代码行 */
+}
+
+/* 代码高亮增强 (覆盖默认的 tango 主题，使其色彩更鲜明) */
+/* 注释 */
+pre code .comment { color: #708090 !important; font-style: italic; }
+/* 字符串 */
+pre code .string, pre code .st { color: #22863a !important; } 
+/* 数字 */
+pre code .number, pre code .dv { color: #005cc5 !important; } 
+/* 关键词 */
+pre code .keyword, pre code .kw { color: #d73a49 !important; font-weight: 600; }
+/* 函数名 */
+pre code .function, pre code .fu { color: #6f42c1 !important; } 
+/* 操作符 */
+pre code .operator, pre code .op { color: #24292e !important; }
+
+/* 优化 R 代码块的输出区域 */
+pre:not([class]) {
+  background-color: #fafbfc;      /* 与输入区形成细微差别 */
+  border-left: 4px solid #bdc3c7; /* 添加左侧指示条，区分输出 */
+}
+
+/* ==================== 表格 ==================== */
+table {
+  width: 100%;
+  margin: 25px 0;
+  border-collapse: collapse;
+  font-size: 0.95em;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border-radius: 8px;
+  overflow: hidden;               /* 确保圆角裁剪掉表格的尖角 */
+}
+
+th {
+  background-color: #f4f6f8;
+  color: #2c3e50;
+  font-weight: 600;
+  text-align: left;
+  padding: 12px 15px;
+  border-bottom: 2px solid #dcdde1;
+}
+
+td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+tr:last-child td {
+  border-bottom: none;            /* 最后一行去除底部边框 */
+}
+
+/* ==================== 高级信息块 (Callout Blocks) ==================== */
+/* 统一样式 */
+.callout-note, .callout-tip, .callout-warning, .callout-important {
+  padding: 1.2em 1.5em;
+  margin: 1.8em 0;
+  border-left: 6px solid;         /* 左侧粗边框作为主要视觉元素 */
+  border-radius: 6px;
+  background-color: #f8f9fa;      /* 统一的极浅灰背景 */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+/* 各自颜色 */
+.callout-note { border-left-color: #3498db; }      /* 蓝 */
+.callout-tip { border-left-color: #2ecc71; }       /* 绿 */
+.callout-warning { border-left-color: #f39c12; }    /* 橙 */
+.callout-important { border-left-color: #e74c3c; }  /* 红 */
+
+/* 信息块内的标题样式 */
+.callout-note h1, .callout-tip h1, .callout-warning h1, .callout-important h1,
+.callout-note h2, .callout-tip h2, .callout-warning h2, .callout-important h2,
+.callout-note h3, .callout-tip h3, .callout-warning h3, .callout-important h3 {
+  margin-top: 0;
+  color: inherit;
+  border-bottom: none;
+}
+
+/* ==================== 浮动目录 (TOC) 美化 ==================== */
+/* 针对 toc_float 生成的内容进行样式调整 */
+#TOC {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 10px 0;
+  border: 1px solid #e9ecef;
+}
+
+#TOC ul {
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+
+#TOC li {
+  margin-bottom: 0;
+}
+
+#TOC a {
+  display: block;
+  padding: 6px 20px;
+  color: #2c3e50;
+  font-size: 0.95em;
+  border-left: 3px solid transparent;  /* 为活动状态预留 */
+  transition: all 0.15s ease;
+}
+
+#TOC a:hover {
+  background-color: #f8f9fa;
+  border-left-color: #3498db;     /* 悬停时显示左侧指示条 */
+  text-decoration: none;
+}
+
+/* ==================== 图片与图标题 ==================== */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  display: block;
+  margin: 1.5em auto;
+}
+
+/* 如果你希望给图片加一个优雅的标题 */
+.figure {
+  text-align: center;
+  margin: 2em 0;
+}
+.figure img {
+  margin-bottom: 0.5em;
+}
+.figure .caption {
+  font-size: 0.9em;
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* ==================== 行内数学公式 ==================== */
+/* 让 LaTeX 公式和周围文字更协调 */
+.math {
+  font-size: 1.05em;
+  background-color: #f8f9fa;
+  padding: 0.1em 0.2em;
+  border-radius: 3px;
+}
+
+/* ==================== 定义列表（用于术语解释） ==================== */
+dl {
+  background-color: #f8fafc;
+  padding: 1.2em 1.8em;
+  border-radius: 8px;
+  border-left: 4px solid #3498db;
+}
+dt {
+  font-weight: 700;
+  color: #1a5276;
+  margin-top: 0.8em;
+}
+dd {
+  margin-left: 1.5em;
+  margin-bottom: 0.8em;
+}
+
+/* ==================== 引用块美化（用于重点摘录） ==================== */
+blockquote {
+  margin: 1.5em 0;
+  padding: 0.8em 1.8em;
+  background-color: #f4f9fd;
+  border-left: 5px solid #2980b9;
+  border-radius: 0 8px 8px 0;
+  color: #2c3e50;
+  font-style: normal;
+}
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* ==================== 代码块内行号（若启用） ==================== */
+pre.numberSource {
+  border-left: none;
+}
