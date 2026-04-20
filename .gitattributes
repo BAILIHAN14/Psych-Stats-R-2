@@ -13,4 +13,3 @@ docs/images/*.jpg linguist-vendored
 # R 和 Rmd 明确为源代码
 *.R linguist-language=R
 *.Rmd linguist-language=RMarkdown
-*.css linguist-vendored=false
