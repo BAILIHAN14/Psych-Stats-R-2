@@ -45,8 +45,7 @@ autosave/
 *.bak
 *.tmp
 # ========== R Markdown / 编译输出 ==========
-# 注意：.Rmd 和 .html 是重要文件，不会被忽略！
-# 但编译时产生的中间文件需要忽略。
+
 
 # Rmd 编译时产生的临时文件夹
 _cache/
@@ -74,7 +73,7 @@ pip-delete-this-directory.txt
 *.egg-info/
 *.egg
 
-# ========== Jupyter Notebook（如果有） ==========
+# ========== Jupyter Notebook（如果我将来要做）==========
 .ipynb_checkpoints/
 *.ipynb
 
@@ -203,3 +202,11 @@ Dockerfile
 .env
 .env.*
 *.secret
+
+# 数据文件、图片、外部资源不计入语言统计
+data/*.sav linguist-vendored
+data/*.xlsx linguist-vendored
+docs/images/*.png linguist-vendored
+docs/images/*.jpg linguist-vendored
+*.css linguist-vendored=false
+*.html linguist-documentation
