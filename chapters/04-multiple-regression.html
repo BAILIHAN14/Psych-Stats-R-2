@@ -1,0 +1,2045 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>PART 4 多元线性回归 – Psych-Statistics: A Practical Guide for Data Analysis</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../summary.html" rel="next">
+<link href="../chapters/03-logistic-regression.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-f79c7fb6db380d32be398468f2fb58cf.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-f79c7fb6db380d32be398468f2fb58cf.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-f79c7fb6db380d32be398468f2fb58cf.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-a0cc0b04a694180613e9fdb98a22a463.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-3fa4bb2bd439bc3f139ef5da6547daa0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-a0cc0b04a694180613e9fdb98a22a463.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><link href="../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="../site_libs/pagedtable-1.1/js/pagedtable.js"></script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+</head>
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/04-multiple-regression.html"><span class="chapter-title">PART 4 多元线性回归</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Psych-Statistics: A Practical Guide for Data Analysis</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/BAILIHAN14/Psych-Stats-R-2" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+<li>
+            <a class="dropdown-item sidebar-tools-main-item" href="../Psych-Statistics--A-Practical-Guide-for-Data-Analysis.pdf">
+              <i class="bi bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="../Psych-Statistics--A-Practical-Guide-for-Data-Analysis.epub">
+              <i class="bi bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+</div>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-1" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-1">
+<li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.linkedin.com/sharing/share-offsite/?url=|url|">
+              <i class="bi bi-linkedin pe-1"></i>
+            LinkedIn
+            </a>
+          </li>
+      </ul>
+</div>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">首页</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01-non-parametric-test.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">PART 1 Non-parametric Test 第一部分 非参数检验</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02-anova.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">PART 2 各类方差分析</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-logistic-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">PART3 Logistic Regression 逻辑回归</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-multiple-regression.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">PART 4 多元线性回归</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">写在最后</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">推荐阅读</span></a>
+  </div>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li>
+<a href="#%E5%A4%9A%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92" id="toc-多元线性回归" class="nav-link active" data-scroll-target="#%E5%A4%9A%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92">10 多元线性回归</a>
+  <ul class="collapse">
+<li><a href="#%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87%E4%B8%8E%E6%B8%85%E6%B4%97" id="toc-数据准备与清洗" class="nav-link" data-scroll-target="#%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87%E4%B8%8E%E6%B8%85%E6%B4%97">10.1数据准备与清洗</a></li>
+  <li><a href="#%E6%8B%9F%E5%90%88%E6%A8%A1%E5%9E%8B%E5%89%8D%E7%9A%84%E5%89%8D%E7%BD%AE%E6%A3%80%E9%AA%8C" id="toc-拟合模型前的前置检验" class="nav-link" data-scroll-target="#%E6%8B%9F%E5%90%88%E6%A8%A1%E5%9E%8B%E5%89%8D%E7%9A%84%E5%89%8D%E7%BD%AE%E6%A3%80%E9%AA%8C">10.2 拟合模型前的前置检验</a></li>
+  <li><a href="#%E6%8B%9F%E5%90%88%E5%A4%9A%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E6%A8%A1%E5%9E%8B" id="toc-拟合多元线性回归模型" class="nav-link" data-scroll-target="#%E6%8B%9F%E5%90%88%E5%A4%9A%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E6%A8%A1%E5%9E%8B">10.3 拟合多元线性回归模型</a></li>
+  <li><a href="#%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%8F%98%E9%87%8F%E7%9A%84%E6%98%BE%E8%91%97%E6%80%A7%E6%A3%80%E9%AA%8C" id="toc-模型与变量的显著性检验" class="nav-link" data-scroll-target="#%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%8F%98%E9%87%8F%E7%9A%84%E6%98%BE%E8%91%97%E6%80%A7%E6%A3%80%E9%AA%8C">10.4 模型与变量的显著性检验</a></li>
+  <li><a href="#%E5%81%8F%E7%9B%B8%E5%85%B3-%E5%8D%8A%E5%81%8F%E7%9B%B8%E5%85%B3" id="toc-偏相关-半偏相关" class="nav-link" data-scroll-target="#%E5%81%8F%E7%9B%B8%E5%85%B3-%E5%8D%8A%E5%81%8F%E7%9B%B8%E5%85%B3">10.5偏相关 &amp; 半偏相关</a></li>
+  <li><a href="#%E6%A8%A1%E5%9E%8B%E8%AF%8A%E6%96%AD%E4%B8%8E%E5%89%8D%E6%8F%90%E5%81%87%E8%AE%BE%E6%A3%80%E9%AA%8C" id="toc-模型诊断与前提假设检验" class="nav-link" data-scroll-target="#%E6%A8%A1%E5%9E%8B%E8%AF%8A%E6%96%AD%E4%B8%8E%E5%89%8D%E6%8F%90%E5%81%87%E8%AE%BE%E6%A3%80%E9%AA%8C">10.6模型诊断与前提假设检验</a></li>
+  <li><a href="#%E6%A8%A1%E5%9E%8B%E9%A2%84%E6%B5%8B%E5%8A%9B%E7%9A%84%E6%94%B6%E7%BC%A9%E4%BC%B0%E8%AE%A1" id="toc-模型预测力的收缩估计" class="nav-link" data-scroll-target="#%E6%A8%A1%E5%9E%8B%E9%A2%84%E6%B5%8B%E5%8A%9B%E7%9A%84%E6%94%B6%E7%BC%A9%E4%BC%B0%E8%AE%A1">10.7 模型预测力的收缩估计</a></li>
+  </ul>
+</li>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/BAILIHAN14/Psych-Stats-R-2/edit/main/chapters/04-multiple-regression.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/BAILIHAN14/Psych-Stats-R-2/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-title">PART 4 多元线性回归</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><div class="rmdnote">
+<p><strong>什么是多元线性回归</strong></p>
+<p>多元线性回归是线性回归的扩展形式，用于分析一个连续因变量与两个或更多自变量之间的线性关系。其模型形式为 Y = a + b1X1 + b2X2 + … + bkXk，可同时考察多个因素对结果的影响。</p>
+<p>与一元线性回归相比：一元只含一个自变量，多元含多个；多元能控制混杂变量、评估各因素的独立贡献，而一元易遗漏变量导致偏差；两者均要求线性关系、残差独立正态等前提。</p>
+</div>
+<section id="多元线性回归" class="level2"><h2 class="anchored" data-anchor-id="多元线性回归">10 多元线性回归</h2>
+<p>作用：用多个影响因素共同预测一个连续结果的变化。</p>
+<p>使用范围：因变量必须是连续型。自变量X优先是连续性数值，也可以是二分类。</p>
+<p>前提假设(但是和别的不一样，前提假设是放到后面的)</p>
+<ol type="1">
+<li>线性关系：每个自变量和因变量之间存在线性关系，自变量之间不存在完美的线性关系；</li>
+<li>独立随机抽样：观测值之间相互独立，无自相关</li>
+<li>残差正态性：模型残差是Z分布</li>
+<li>同方差性：残差的方差不随自变量\预测值的变化而变化。</li>
+<li>无严重多重共线性：自变量之间不能高度线性相关。</li>
+</ol>
+<section id="数据准备与清洗" class="level3"><h3 class="anchored" data-anchor-id="数据准备与清洗">10.1数据准备与清洗</h3>
+<p>数据导入：将整理好的数据读入分析工具，要求每一行是 1 个观测样本，每一列是 1 个变量（因变量 Y + 所有自变量 X）</p>
+<p>基础清洗：剔除缺失值、重复值，确保变量类型正确（数值型）<br>
+初步异常值筛查：通过散点图、描述统计初步识别极端值，为后续模型诊断做准备。<br><em>注：这个数据是ai编的，不代表实际情况</em></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#Preparation </span></span>
+<span></span>
+<span></span>
+<span><span class="co"># upload the data导入数据</span></span>
+<span><span class="co">#library(haven)</span></span>
+<span><span class="va">x_df</span><span class="op">&lt;-</span><span class="fu">read_sav</span><span class="op">(</span><span class="fu">here</span><span class="op">(</span><span class="st">"data"</span>,<span class="st">"sav_files"</span>,<span class="st">"MLR_work.sav"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/attach.html">attach</a></span><span class="op">(</span><span class="va">x_df</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># str(object) 显示R对象（如数据框）的内部结构，包括变量名、类型和前几个观测值</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">x_df</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tibble [200 × 5] (S3: tbl_df/tbl/data.frame)
+ $ aptitude   : num [1:200] 36 51 57.8 55.8 53.4 ...
+  ..- attr(*, "label")= chr "学习能力倾向测验得分"
+  ..- attr(*, "format.spss")= chr "F8.2"
+ $ study_hours: num [1:200] 4.89 5.82 6.85 5.15 3.81 ...
+  ..- attr(*, "label")= chr "每周学习统计学的时长（小时）"
+  ..- attr(*, "format.spss")= chr "F8.2"
+ $ math_base  : num [1:200] 65.3 73.4 71 65.8 36.4 ...
+  ..- attr(*, "label")= chr "高考数学百分制成绩"
+  ..- attr(*, "format.spss")= chr "F8.2"
+ $ gender     : num [1:200] 1 1 1 0 1 0 1 0 0 1 ...
+  ..- attr(*, "label")= chr "性别（0=女性，1=男性）"
+  ..- attr(*, "format.spss")= chr "F8.2"
+ $ stats_score: num [1:200] 80 79 73 80 67 68 62 61 77 74 ...
+  ..- attr(*, "label")= chr "心理统计学期末成绩（百分制）"
+  ..- attr(*, "format.spss")= chr "F8.2"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">x_df</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["aptitude"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["study_hours"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["math_base"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["gender"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["stats_score"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"36.02287","2":"4.894853","3":"65.29092","4":"1","5":"80"},{"1":"51.03910","2":"5.820214","3":"73.35290","4":"1","5":"79"},{"1":"57.83236","2":"6.848619","3":"70.98421","4":"1","5":"73"},{"1":"55.84552","2":"5.154986","3":"65.78713","4":"0","5":"80"},{"1":"53.43701","2":"3.806433","3":"36.39225","4":"1","5":"67"},{"1":"52.57279","2":"1.924665","3":"56.98476","4":"0","5":"68"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># colSums(is.na(data.frame)) 按列计算缺失值数量，is.na()返回逻辑矩阵，colSums()求和</span></span>
+<span><span class="va">missing_count</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colSums</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">x_df</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">missing_count</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   aptitude study_hours   math_base      gender stats_score 
+          0           0           0           0           0 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 若存在缺失值，可选择删除含缺失值的行（列表删除）</span></span>
+<span><span class="co"># na.omit(object) 返回删除任何含有NA值的行后的数据框</span></span>
+<span></span>
+<span><span class="va">gender</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">gender</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>或者整理变量矩阵（第一列为因变量Y，后续列为自变量X）\</p>
+<p>这是另一个例子<br>
+m &lt;- matrix(nrow = length(salary), ncol = 5)<br>
+m[,1] &lt;- salary # 因变量Y：薪资<br>
+m[,2] &lt;- educ # 自变量X1：受教育年限<br>
+m[,3] &lt;- salbegin # 自变量X2：起薪<br>
+m[,4] &lt;- jobtime # 自变量X3：在职时长<br>
+m[,5] &lt;- prevexp # 自变量X4：过往工作经验<br>
+然后一定要注意矩阵，矩阵里是只能放数字的。&nbsp;<br>
+比如有那种二分类的，就把他转成01这样就好&nbsp;<br>
+有个更快的办法是as.matrix()</p>
+<p><br><em>别.把.矩.阵.的.英.语.拼.错.了.</em></p>
+<p><em>我。说。怎。么。老。报。错。</em></p>
+<p><em>M.A.T.R.I.X</em>.</p>
+</section><section id="拟合模型前的前置检验" class="level3"><h3 class="anchored" data-anchor-id="拟合模型前的前置检验">10.2 拟合模型前的前置检验</h3>
+<p>相关性检验：计算所有变量的相关矩阵<br>
+核心目的 1：确认因变量Y和每个自变量X有一定相关性，完全无相关的 X 无需纳入模型； 核心目的 2：初步判断自变量之间的相关性，排查多重共线性风险。</p>
+<p>线性关系检验：绘制每个自变量与因变量的散点图，确认二者存在线性趋势，无明显的非线性关系；</p>
+<p>样本量校验：对照上述样本量标准，确认样本量满足分析要求。<br><em>样本量校验就用眼睛看（）</em></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#caculate correlation matrix</span></span>
+<span><span class="va">m</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">x_df</span><span class="op">)</span></span>
+<span><span class="va">cor_matrix_mlr</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
+<span><span class="va">cor_matrix_mlr</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               aptitude study_hours   math_base      gender stats_score
+aptitude     1.00000000  0.10129102  0.22473605 -0.01073259   0.5181937
+study_hours  0.10129102  1.00000000  0.13494140  0.02039795   0.1800559
+math_base    0.22473605  0.13494140  1.00000000 -0.02803105   0.4379921
+gender      -0.01073259  0.02039795 -0.02803105  1.00000000  -0.0148292
+stats_score  0.51819374  0.18005587  0.43799209 -0.01482920   1.0000000</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 绘制单个自变量与因变量散点图</span></span>
+<span><span class="co">#plot(数据框名$自变量名, 数据框名$因变量名,</span></span>
+<span>     <span class="co">#main = "自变量X与因变量Y散点图",</span></span>
+<span>     <span class="co">#xlab = "自变量X", ylab = "因变量Y")</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">x_df</span><span class="op">$</span><span class="va">aptitude</span>, <span class="va">x_df</span><span class="op">$</span><span class="va">stats_score</span>,</span>
+<span>     main <span class="op">=</span> <span class="st">"学习倾向得分与考试得分散点图"</span>,</span>
+<span>     xlab <span class="op">=</span> <span class="st">"学习倾向得分"</span>, ylab <span class="op">=</span> <span class="st">"考试得分"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 添加拟合直线，更清晰看线性趋势</span></span>
+<span><span class="co">#abline(lm(因变量名 ~ 自变量名, data = 数据框名), col = "red", lwd = 2)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">stats_score</span> <span class="op">~</span> <span class="va">aptitude</span>, data <span class="op">=</span> <span class="va">x_df</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"red"</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="04-multiple-regression_files/figure-html/Correaltion-matrix-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 绘制 性别 与 考试得分 的箱线图</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/boxplot.html">boxplot</a></span><span class="op">(</span><span class="va">x_df</span><span class="op">$</span><span class="va">stats_score</span> <span class="op">~</span> <span class="va">x_df</span><span class="op">$</span><span class="va">gender</span>,</span>
+<span>        main <span class="op">=</span> <span class="st">"性别与考试得分箱线图"</span>,</span>
+<span>        xlab <span class="op">=</span> <span class="st">"性别"</span>, </span>
+<span>        ylab <span class="op">=</span> <span class="st">"考试得分"</span>,</span>
+<span>        col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lightblue"</span>,<span class="st">"salmon"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="04-multiple-regression_files/figure-html/Correaltion-matrix-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 批量绘制所有自变量与因变量散点图（5列数据用2行3列排版，排的是画出来的小图的板，也就是四个小图放到一个2*3的格子里）</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 循环绘制每个X与Y的散点图(连续性用散点，不连续用箱线)</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="co"># plot(自变量, 因变量)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">m</span><span class="op">[</span>, <span class="va">i</span><span class="op">]</span>, <span class="va">m</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>,</span>
+<span>       xlab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>,</span>
+<span>       ylab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
+<span>       main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="st">"vs"</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="co"># 添加线性拟合直线</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">m</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">~</span> <span class="va">m</span><span class="op">[</span>, <span class="va">i</span><span class="op">]</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"red"</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="co">#画出来不是很好看其实。但也凑活。如果想好看点可以参考下面的</span></span>
+<span></span>
+<span><span class="va">df</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<span>  学习能力 <span class="op">=</span> <span class="va">x_df</span><span class="op">$</span><span class="va">aptitude</span>,</span>
+<span>  数学基础 <span class="op">=</span> <span class="va">x_df</span><span class="op">$</span><span class="va">math_base</span>,</span>
+<span>  学习时间 <span class="op">=</span> <span class="va">x_df</span><span class="op">$</span><span class="va">study_hours</span>,</span>
+<span>  性别 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">x_df</span><span class="op">$</span><span class="va">gender</span><span class="op">)</span>,<span class="co">#注意，这里有一个很大的区别就是之前的gender是numeric而这个是factor</span></span>
+<span>  考试得分 <span class="op">=</span> <span class="va">x_df</span><span class="op">$</span><span class="va">stats_score</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["学习能力"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["数学基础"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["学习时间"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["性别"],"name":[4],"type":["fct"],"align":["left"]},{"label":["考试得分"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"36.02287","2":"65.29092","3":"4.894853","4":"1","5":"80","_rn_":"1"},{"1":"51.03910","2":"73.35290","3":"5.820214","4":"1","5":"79","_rn_":"2"},{"1":"57.83236","2":"70.98421","3":"6.848619","4":"1","5":"73","_rn_":"3"},{"1":"55.84552","2":"65.78713","3":"5.154986","4":"0","5":"80","_rn_":"4"},{"1":"53.43701","2":"36.39225","3":"3.806433","4":"1","5":"67","_rn_":"5"},{"1":"52.57279","2":"56.98476","3":"1.924665","4":"0","5":"68","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 加载包（如果没装过，先运行一次下面这句）</span></span>
+<span><span class="co"># install.packages("ggplot2")</span></span>
+<span><span class="co">#嘴一句，ggplot2真的是万恶之源。</span></span>
+<span><span class="co">#library(ggplot2)</span></span>
+<span></span>
+<span><span class="co"># --------------- 美观的图（2×2排版）---------------</span></span>
+<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x<span class="op">=</span><span class="va">学习时间</span>, y<span class="op">=</span><span class="va">考试得分</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>color<span class="op">=</span><span class="st">"#457b9d"</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, size<span class="op">=</span><span class="fl">1.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_smooth</span><span class="op">(</span>method<span class="op">=</span><span class="va">lm</span>, se<span class="op">=</span><span class="cn">F</span>, color<span class="op">=</span><span class="st">"#e63946"</span>, linewidth<span class="op">=</span><span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>title<span class="op">=</span><span class="st">"学习时间 vs 成绩"</span>, x<span class="op">=</span><span class="st">"学习时间"</span>, y<span class="op">=</span><span class="st">"考试得分"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x<span class="op">=</span><span class="va">数学基础</span>, y<span class="op">=</span><span class="va">考试得分</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>color<span class="op">=</span><span class="st">"#457b9d"</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, size<span class="op">=</span><span class="fl">1.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_smooth</span><span class="op">(</span>method<span class="op">=</span><span class="va">lm</span>, se<span class="op">=</span><span class="cn">F</span>, color<span class="op">=</span><span class="st">"#e63946"</span>, linewidth<span class="op">=</span><span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>title<span class="op">=</span><span class="st">"数学基础 vs 成绩"</span>, x<span class="op">=</span><span class="st">"数学基础"</span>, y<span class="op">=</span><span class="st">"考试得分"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">性别</span><span class="op">)</span>, y<span class="op">=</span><span class="va">考试得分</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_boxplot</span><span class="op">(</span>fill<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"#a8dadc"</span>,<span class="st">"#f1faee"</span><span class="op">)</span>, color<span class="op">=</span><span class="st">"#1d3557"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>title<span class="op">=</span><span class="st">"性别 vs 成绩"</span>, x<span class="op">=</span><span class="st">"性别"</span>, y<span class="op">=</span><span class="st">"考试得分"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p4</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x<span class="op">=</span><span class="va">学习能力</span>, y<span class="op">=</span><span class="va">考试得分</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>color<span class="op">=</span><span class="st">"#457b9d"</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, size<span class="op">=</span><span class="fl">1.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_smooth</span><span class="op">(</span>method<span class="op">=</span><span class="va">lm</span>, se<span class="op">=</span><span class="cn">F</span>, color<span class="op">=</span><span class="st">"#e63946"</span>, linewidth<span class="op">=</span><span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>title<span class="op">=</span><span class="st">"学习能力 vs 成绩"</span>, x<span class="op">=</span><span class="st">"学习能力"</span>, y<span class="op">=</span><span class="st">"考试得分"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 组合成 2×2 拼图</span></span>
+<span><span class="co">#library(gridExtra)</span></span>
+<span><span class="fu">grid.arrange</span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, <span class="va">p3</span>, <span class="va">p4</span>, ncol<span class="op">=</span><span class="fl">2</span>, nrow<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#其实颜色这一块有个小妙招（井号加一个三位数一般也是一个好看的颜色）</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="04-multiple-regression_files/figure-html/Correaltion-matrix-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section id="拟合多元线性回归模型" class="level3"><h3 class="anchored" data-anchor-id="拟合多元线性回归模型">10.3 拟合多元线性回归模型</h3>
+<p>核心模型公式：原始分数模型（非标准化）： <span class="math display">\[Y=α+β_1X_1+β_2X_2+...+β_pX_p+e\]</span><br>
+α：截距，所有自变量为 0 时 Y 的预测值；&nbsp;</p>
+<p>β₁~βₚ：非标准化回归系数，X 每变化 1 个单位，Y 的变化量<br>
+e：残差，服从均值为 0、方差为 σ² 的正态分布。</p>
+<p><br>
+散点图大家都能看出来，那就讲解箱线图怎么看<br>
+箱体就是中间的长方形，箱体高度代表数据的离散程度：<br>
+箱体越高，数据越分散；越低，数据越集中 下沿 = Q1（第 25 百分位数），<br>
+上沿 = Q3（第 75 百分位数）</p>
+<p><br>
+R²（多重决定系数）：模型解释的 Y 的变异 \ Y 的总变异，取值 0~1，越接近 1 说明模型解释力越强； 当自变量之间完全不相关时，R²= 每个自变量与 Y 的相关系数的平方和； 当自变量之间相关时，需扣除重叠的方差，R² 小于平方和。</p>
+<p>调整 R²：对 R² 进行校正，处决多余的自变量（自变量越多，R² 会虚高），公式为：Radj2=R2−N−P−1P(1−R2)是评价模型真实解释力的核心指标，</p>
+<p>本节课给出的评价标准：</p>
+<p>调整 R²&gt;75%：非常好，夯；50%-75%：好，人上人；25%-50%：尚可，NPC；&lt;25%：解释力不足，拉完了。</p>
+<section id="拟合非标准化多元线性回归模型" class="level4"><h4 class="anchored" data-anchor-id="拟合非标准化多元线性回归模型">10.3.1拟合非标准化多元线性回归模型</h4>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#模型fit&lt;-lm(因变量~自变量1+自变量2+...+自变量n,data=df)</span></span>
+<span><span class="co">#summary(fit)</span></span>
+<span><span class="va">gender</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">gender</span><span class="op">)</span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">stats_score</span><span class="op">~</span> <span class="va">aptitude</span> <span class="op">+</span> <span class="va">math_base</span> <span class="op">+</span> <span class="va">study_hours</span> <span class="op">+</span> <span class="va">gender</span>, data <span class="op">=</span> <span class="va">x_df</span><span class="op">)</span> </span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = stats_score ~ aptitude + math_base + study_hours + 
+    gender, data = x_df)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-24.2783  -4.3534  -0.1777   5.1722  20.3505 
+
+Coefficients:
+            Estimate Std. Error t value             Pr(&gt;|t|)    
+(Intercept) 35.61706    4.01651   8.868 0.000000000000000474 ***
+aptitude     0.40377    0.05359   7.535 0.000000000001789076 ***
+math_base    0.27350    0.04842   5.649 0.000000056644689811 ***
+study_hours  0.48723    0.30154   1.616                0.108    
+gender      -0.05563    1.09846  -0.051                0.960    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 7.762 on 195 degrees of freedom
+Multiple R-squared:  0.3856,    Adjusted R-squared:  0.373 
+F-statistic:  30.6 on 4 and 195 DF,  p-value: &lt; 0.00000000000000022</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coefficients</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)    aptitude   math_base study_hours      gender 
+35.61706198  0.40377348  0.27350247  0.48722719 -0.05563135 </code></pre>
+</div>
+</div>
+</section><section id="拟合标准化回归模型" class="level4"><h4 class="anchored" data-anchor-id="拟合标准化回归模型">10.3.2 拟合标准化回归模型</h4>
+<p>（获取Beta权重，比较自变量贡献） 标准化模型（Beta 权重版）： <span class="math display">\[Zy^=B1Zx1+B2Zx2+...+BpZxp\]</span> B₁~Bₚ：标准化回归系数（Beta 权重），消除了量纲影响，可直接比较不同自变量对 Y 的贡献大小；<br>
+含义：控制其他自变量不变时，该 X 每变化 1 个标准差，Y 的变化量。 核心解释力指标<br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#模型和之前一样，只不过把所有的变量放到scale()里了</span></span>
+<span><span class="va">fit_std</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="va">stats_score</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="va">aptitude</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="va">math_base</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="va">study_hours</span><span class="op">)</span> , data <span class="op">=</span> <span class="va">x_df</span><span class="op">)</span></span>
+<span><span class="co"># 查看标准化模型结果</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit_std</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = scale(stats_score) ~ scale(aptitude) + scale(math_base) + 
+    scale(study_hours), data = x_df)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.47399 -0.44448 -0.01876  0.52634  2.07311 
+
+Coefficients:
+                                Estimate            Std. Error t value
+(Intercept)        0.0000000000000001396 0.0558469729913272928   0.000
+scale(aptitude)    0.4352330431697107871 0.0576127117574671901   7.554
+scale(math_base)   0.3278004465293811176 0.0578454792664317916   5.667
+scale(study_hours) 0.0917368191403445388 0.0566571702695706989   1.619
+                           Pr(&gt;|t|)    
+(Intercept)                   1.000    
+scale(aptitude)    0.00000000000157 ***
+scale(math_base)   0.00000005139245 ***
+scale(study_hours)            0.107    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.7898 on 196 degrees of freedom
+Multiple R-squared:  0.3856,    Adjusted R-squared:  0.3762 
+F-statistic: 41.01 on 3 and 196 DF,  p-value: &lt; 0.00000000000000022</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 提取标准化Beta系数</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coefficients</a></span><span class="op">(</span><span class="va">fit_std</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             (Intercept)          scale(aptitude)         scale(math_base) 
+0.0000000000000001395962 0.4352330431697107870903 0.3278004465293811175997 
+      scale(study_hours) 
+0.0917368191403445387699 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#!!!注意，二分类变量是不能被标准化的</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section></section><section id="模型与变量的显著性检验" class="level3"><h3 class="anchored" data-anchor-id="模型与变量的显著性检验">10.4 模型与变量的显著性检验</h3>
+<p>模型整体显著性检验（F 检验）</p>
+<p>原假设 H₀：所有自变量的回归系数均为 0，模型无预测效果；</p>
+<p>计算公式：F=(1−R2)\(N−P−1)R2\P</p>
+<p>自由度：分子 df=P（自变量个数），分母 df=N-P-1；</p>
+<p>结果判断：F 值对应的 p 值 &lt; 0.05，说明模型整体具有统计学显著性。</p>
+<p>单个自变量的显著性检验（t 检验）</p>
+<p>原假设 H₀：控制其他自变量不变时，该自变量的回归系数为 0，无独立影响；</p>
+<p>自由度：df=N-P-1；</p>
+<p>结果判断：t 值对应的 p 值 &lt; 0.05，说明该自变量的独立影响具有统计学显著性。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#模型与变量显著性检验</span></span>
+<span><span class="co"># 1. 先拟合【非标准化基准模型】</span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">stats_score</span> <span class="op">~</span> <span class="va">aptitude</span> <span class="op">+</span> <span class="va">math_base</span> <span class="op">+</span> <span class="va">study_hours</span> <span class="op">+</span> <span class="va">gender</span>, data <span class="op">=</span> <span class="va">x_df</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 一、模型整体显著性检验（F 检验）</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">$</span><span class="va">fstatistic</span>  <span class="co"># 提取F值、分子自由度df1、分母自由度df2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    value     numdf     dendf 
+ 30.60021   4.00000 195.00000 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/Fdist.html">pf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">$</span><span class="va">fstatistic</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, </span>
+<span>   df1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">$</span><span class="va">fstatistic</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, </span>
+<span>   df2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">$</span><span class="va">fstatistic</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span>, </span>
+<span>   lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>  <span class="co"># 计算F检验对应的p值</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                       value 
+0.00000000000000000009081753 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 手算F值</span></span>
+<span><span class="va">R2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">$</span><span class="va">r.squared</span>  <span class="co"># 决定系数R²</span></span>
+<span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">x_df</span><span class="op">)</span>               <span class="co"># 样本量N</span></span>
+<span><span class="va">P</span> <span class="op">&lt;-</span> <span class="fl">4</span>                        <span class="co"># 自变量个数P</span></span>
+<span><span class="va">F_manual</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">R2</span> <span class="op">/</span> <span class="va">P</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">R2</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="va">N</span> <span class="op">-</span> <span class="va">P</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"手动公式计算F值 ="</span>, <span class="va">F_manual</span>, <span class="st">"\n"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>手动公式计算F值 = 30.60021 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 二、单个自变量显著性检验（t 检验）</span></span>
+<span></span>
+<span><span class="va">coef_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">)</span>  <span class="co"># 提取系数表（含t值、p值）</span></span>
+<span><span class="va">coef_table</span>                       <span class="co"># 输出：估计值、标准误、t值、p值</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               Estimate Std. Error     t value                 Pr(&gt;|t|)
+(Intercept) 35.61706198 4.01651298  8.86765764 0.0000000000000004741562
+aptitude     0.40377348 0.05358824  7.53474039 0.0000000000017890755902
+math_base    0.27350247 0.04841997  5.64854691 0.0000000566446898105584
+study_hours  0.48722719 0.30154104  1.61579065 0.1077563132088406039344
+gender      -0.05563135 1.09846229 -0.05064476 0.9596604372670300975301</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 单独提取t值和p值（精准查看）</span></span>
+<span><span class="va">t_values</span> <span class="op">&lt;-</span> <span class="va">coef_table</span><span class="op">[</span>, <span class="st">"t value"</span><span class="op">]</span></span>
+<span><span class="va">p_values</span> <span class="op">&lt;-</span> <span class="va">coef_table</span><span class="op">[</span>, <span class="st">"Pr(&gt;|t|)"</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"自变量t值：\n"</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">t_values</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>自变量t值：</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)    aptitude   math_base study_hours      gender 
+ 8.86765764  7.53474039  5.64854691  1.61579065 -0.05064476 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"自变量p值：\n"</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">p_values</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>自变量p值：</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             (Intercept)                 aptitude                math_base 
+0.0000000000000004741562 0.0000000000017890755902 0.0000000566446898105584 
+             study_hours                   gender 
+0.1077563132088406039344 0.9596604372670300975301 </code></pre>
+</div>
+</div>
+</section><section id="偏相关-半偏相关" class="level3"><h3 class="anchored" data-anchor-id="偏相关-半偏相关">10.5偏相关 &amp; 半偏相关</h3>
+<p>半偏相关（sr，部分相关）：扣除其他自变量对该 X 的影响后，X 与原始 Y 的相关。</p>
+<p># 计算半偏相关</p>
+<p>spcor_result &lt;- spcor(m) spcor_result<br>
+estimate # 半偏相关系数矩阵 spcor_result<br>
+p.value # 半偏相关对应的p值</p>
+<p>偏相关（pr）：扣除其他自变量对 X 和 Y 两者的影响后，X 与 Y 的净相关</p>
+<p># 计算偏相关<br>
+pcor_result &lt;- pcor(m) pcor_result</p>
+<p>estimate # 偏相关系数矩阵 pcor_result</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#半偏相关（部分相关 sr）计算 </span></span>
+<span><span class="co">#library(ppcor)</span></span>
+<span><span class="co"># 函数：spcor(矩阵)  计算半偏相关系数+对应p值</span></span>
+<span><span class="co"># 含义：扣除其他自变量对该X的影响后，X与原始Y的相关</span></span>
+<span><span class="va">spcor_result</span> <span class="op">&lt;-</span> <span class="fu">spcor</span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
+<span><span class="co"># 提取半偏相关系数</span></span>
+<span><span class="va">spcor_estimate</span> <span class="op">&lt;-</span> <span class="va">spcor_result</span><span class="op">$</span><span class="va">estimate</span></span>
+<span><span class="co"># 提取半偏相关显著性p值</span></span>
+<span><span class="va">spcor_p</span> <span class="op">&lt;-</span> <span class="va">spcor_result</span><span class="op">$</span><span class="va">p.value</span></span>
+<span></span>
+<span><span class="co"># 输出结果</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"半偏相关系数矩阵 \n"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>半偏相关系数矩阵 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">spcor_estimate</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                aptitude study_hours   math_base       gender  stats_score
+aptitude     1.000000000 0.008374259 -0.00308377 -0.003317461  0.461450683
+study_hours  0.009609118 1.000000000  0.06297927  0.024606937  0.113547933
+math_base   -0.003233985 0.057559428  1.00000000 -0.022893834  0.362785338
+gender      -0.003876321 0.025057302 -0.02550800  1.000000000 -0.003624143
+stats_score  0.422925884 0.090694523  0.31705362 -0.002842696  1.000000000</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">" 半偏相关p值矩阵 \n"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> 半偏相关p值矩阵 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">spcor_p</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                      aptitude study_hours      math_base    gender
+aptitude    0.0000000000000000   0.9070246 0.965695609510 0.9630978
+study_hours 0.8933905467860259   0.0000000 0.379290638889 0.7314263
+math_base   0.9640256927356987   0.4217377 0.000000000000 0.7494784
+gender      0.9568867853046437   0.7267044 0.721989301481 0.0000000
+stats_score 0.0000000005968425   0.2049868 0.000005641271 0.9683759
+                     stats_score
+aptitude    0.000000000008818196
+study_hours 0.112123268462137687
+math_base   0.000000161343999160
+gender      0.959689099280614855
+stats_score 0.000000000000000000</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 偏相关（pr）计算</span></span>
+<span><span class="co"># 函数：pcor(矩阵)  计算偏相关系数+对应p值</span></span>
+<span><span class="co"># 含义：扣除其他自变量对X和Y两者的影响后，X与Y的净相关</span></span>
+<span><span class="va">pcor_result</span> <span class="op">&lt;-</span> <span class="fu">pcor</span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
+<span><span class="co"># 提取偏相关系数</span></span>
+<span><span class="va">pcor_estimate</span> <span class="op">&lt;-</span> <span class="va">pcor_result</span><span class="op">$</span><span class="va">estimate</span></span>
+<span><span class="co"># 提取偏相关显著性p值</span></span>
+<span><span class="va">pcor_p</span> <span class="op">&lt;-</span> <span class="va">pcor_result</span><span class="op">$</span><span class="va">p.value</span></span>
+<span></span>
+<span><span class="co"># 输出结果</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"偏相关系数矩阵\n"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>偏相关系数矩阵</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">pcor_estimate</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                aptitude study_hours    math_base       gender  stats_score
+aptitude     1.000000000 0.009791546 -0.003605827 -0.003879075  0.474858601
+study_hours  0.009791546 1.000000000  0.064046238  0.025067419  0.114942271
+math_base   -0.003605827 0.064046238  1.000000000 -0.025518009  0.374984807
+gender      -0.003879075 0.025067419 -0.025518009  1.000000000 -0.003626722
+stats_score  0.474858601 0.114942271  0.374984807 -0.003626722  1.000000000</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"偏相关p值矩阵\n"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>偏相关p值矩阵</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">pcor_p</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                        aptitude study_hours        math_base    gender
+aptitude    0.000000000000000000   0.8913789 0.95989266503626 0.9568562
+study_hours 0.891378918784915042   0.0000000 0.37125256899442 0.7265984
+math_base   0.959892665036259363   0.3712526 0.00000000000000 0.7218847
+gender      0.956856175334136916   0.7265984 0.72188472199334 0.0000000
+stats_score 0.000000000001789076   0.1077563 0.00000005664469 0.9596604
+                     stats_score
+aptitude    0.000000000001789076
+study_hours 0.107756313208840424
+math_base   0.000000056644689811
+gender      0.959660437267027322
+stats_score 0.000000000000000000</code></pre>
+</div>
+</div>
+</section><section id="模型诊断与前提假设检验" class="level3"><h3 class="anchored" data-anchor-id="模型诊断与前提假设检验">10.6模型诊断与前提假设检验</h3>
+<ol type="1">
+<li><p>多重共线性检验<br>
+核心指标：容忍度（Tolerance）、方差膨胀因子（VIF） 计算公式：容忍度=1-Rc²（Rc²= 该自变量被其他所有自变量预测的 R²），VIF=1\容忍度<br>
+判断标准：容忍度 &lt;0.2 提示潜在多重共线性，&lt;0.1 为严重多重共线性；VIF&gt;5 为严重多重共线性。</p></li>
+<li>
+<p>残差正态性检验：绘制残差直方图、标准化残差 QQ 图，QQ 图上的点越贴近对角线，说明残差正态性越好。</p>
+<p>hist(resid) # 残差直方图</p>
+<p>plot(fit, which = 2) # 标准化残差QQ图</p>
+</li>
+<li>
+<p>同方差性检验：绘制残差 vs 拟合值的散点图，残差随机分布在 0 线上下、无明显趋势（如漏斗形），说明满足同方差性。</p>
+<p>plot(fit, which = 1) # 残差vs拟合值散点图异常值与强影响点检验<br>
+残差值：绝对值越大，越可能是异常值；<br>
+Cook 距离：&gt;1 提示为强影响点，会显著改变模型结果；<br>
+杠杆值（Hat 值）：超过平均值 2-3 倍为高杠杆点，平均值 =(P+1)\N；<br>
+马氏距离：衡量样本离自变量均值的距离，过大提示为多元异常值</p>
+</li>
+</ol>
+<p>多重共线性核心公式 <span class="math display">\[Tolerance = 1 - R_C^2 \quad \text{VIF} = \frac{1}{\text{Tolerance}}\]</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#步骤6 模型诊断与前提假设检验 </span></span>
+<span><span class="co"># 加载必备包（car包用于VIF计算，课件标准方法）</span></span>
+<span><span class="co"># install.packages("car")</span></span>
+<span><span class="co">#library(car)</span></span>
+<span></span>
+<span><span class="co"># 沿用已拟合的非标准化回归模型（与前序步骤一致）</span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">stats_score</span> <span class="op">~</span> <span class="va">aptitude</span> <span class="op">+</span> <span class="va">math_base</span> <span class="op">+</span> <span class="va">study_hours</span> <span class="op">+</span> <span class="va">gender</span>, data <span class="op">=</span> <span class="va">x_df</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#1. 多重共线性检验</span></span>
+<span><span class="co"># 计算方差膨胀因子VIF</span></span>
+<span><span class="va">vif_result</span> <span class="op">&lt;-</span> <span class="fu">vif</span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="co"># 计算容忍度 Tolerance = 1\VIF</span></span>
+<span><span class="va">tolerance_result</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">/</span> <span class="va">vif_result</span></span>
+<span></span>
+<span><span class="co"># 输出多重共线性结果</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"多重共线性检验结果\n"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>多重共线性检验结果</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"方差膨胀因子VIF：\n"</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">vif_result</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>方差膨胀因子VIF：</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   aptitude   math_base study_hours      gender 
+   1.058956    1.068385    1.024710    1.001424 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb57"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"容忍度Tolerance：\n"</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">tolerance_result</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>容忍度Tolerance：</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   aptitude   math_base study_hours      gender 
+  0.9443260   0.9359919   0.9758856   0.9985783 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#2. 残差正态性检验</span></span>
+<span><span class="co"># 提取模型残差</span></span>
+<span><span class="va">resid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="co"># 残差直方图</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">resid</span>, main <span class="op">=</span> <span class="st">"残差直方图"</span>, xlab <span class="op">=</span> <span class="st">"残差值"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="04-multiple-regression_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb61"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 标准化残差QQ图（代码：plot(fit, which = 2)）</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fit</span>, which <span class="op">=</span> <span class="fl">2</span>, main <span class="op">=</span> <span class="st">"标准化残差QQ图"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="04-multiple-regression_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#3. 同方差性检验</span></span>
+<span><span class="co"># 残差vs拟合值散点图（代码：plot(fit, which = 1)）</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fit</span>, which <span class="op">=</span> <span class="fl">1</span>, main <span class="op">=</span> <span class="st">"残差vs拟合值散点图"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="04-multiple-regression_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 4. 异常值与强影响点检</span></span>
+<span><span class="co"># 残差值（绝对值越大越可能异常）</span></span>
+<span><span class="va">resid_abs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">resid</span><span class="op">)</span></span>
+<span><span class="co"># Cook距离（&gt;1为强影响点）</span></span>
+<span><span class="va">cook_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/influence.measures.html">cooks.distance</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="co"># 杠杆值Hat值（平均值=(P+1)\N，超2-3倍为高杠杆）</span></span>
+<span><span class="va">hat_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/influence.measures.html">hatvalues</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="va">hat_mean</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">x_df</span><span class="op">)</span>  <span class="co"># (P+1)\N</span></span>
+<span><span class="co"># 马氏距离（多元异常值检验）</span></span>
+<span><span class="va">x_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span>  <span class="co"># 提取自变量矩阵</span></span>
+<span><span class="va">mahal_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/mahalanobis.html">mahalanobis</a></span><span class="op">(</span><span class="va">x_matrix</span>, <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colMeans</a></span><span class="op">(</span><span class="va">x_matrix</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cov</a></span><span class="op">(</span><span class="va">x_matrix</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 输出异常值核心结果</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"异常值检验核心指标\n"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>异常值检验核心指标</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb65"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"杠杆值平均值："</span>, <span class="va">hat_mean</span>, <span class="st">"\n"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>杠杆值平均值： 0.025 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb67"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Cook距离最大值："</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">cook_result</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Cook距离最大值： 0.0418883 </code></pre>
+</div>
+</div>
+</section><section id="模型预测力的收缩估计" class="level3"><h3 class="anchored" data-anchor-id="模型预测力的收缩估计">10.7 模型预测力的收缩估计</h3>
+<p>交叉验证：将样本拆分为两半，一半拟合模型，一半做预测，计算真实值与预测值的相关系数；</p>
+<p>双重交叉验证：交换两半样本重复上述操作，取两个相关系数的平均值；</p>
+<p>PRESS 统计量：每次留 1 个样本，用剩下的 N-1 个样本拟合模型预测该样本，重复 N 次，计算残差平方和。<br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb69"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 模型预测力的收缩估计 </span></span>
+<span><span class="co"># 沿用之前的基准回归模型</span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">stats_score</span> <span class="op">~</span> <span class="va">aptitude</span> <span class="op">+</span> <span class="va">math_base</span> <span class="op">+</span> <span class="va">study_hours</span> <span class="op">+</span> <span class="va">gender</span>, data <span class="op">=</span> <span class="va">x_df</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span> <span class="co"># 固定随机数，结果可重复</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># 1. 简单交叉验证（样本拆分：一半建模，一半预测）</span></span>
+<span><span class="co"># 方法：将数据随机分为训练集(50%)、测试集(50%)，计算真实值与预测值的相关系数</span></span>
+<span></span>
+<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">x_df</span><span class="op">)</span></span>
+<span><span class="va">train_idx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">n</span>, size <span class="op">=</span> <span class="va">n</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span>  <span class="co"># 随机抽取50%样本作为训练集</span></span>
+<span><span class="va">train_data</span> <span class="op">&lt;-</span> <span class="va">x_df</span><span class="op">[</span><span class="va">train_idx</span>, <span class="op">]</span></span>
+<span><span class="va">test_data</span>  <span class="op">&lt;-</span> <span class="va">x_df</span><span class="op">[</span><span class="op">-</span><span class="va">train_idx</span>, <span class="op">]</span></span>
+<span></span>
+<span><span class="co"># 训练集拟合模型，测试集预测</span></span>
+<span><span class="va">fit_cv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">stats_score</span> <span class="op">~</span> <span class="va">aptitude</span> <span class="op">+</span> <span class="va">math_base</span> <span class="op">+</span> <span class="va">study_hours</span> <span class="op">+</span> <span class="va">gender</span>, data <span class="op">=</span> <span class="va">train_data</span><span class="op">)</span></span>
+<span><span class="va">pred_cv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_cv</span>, newdata <span class="op">=</span> <span class="va">test_data</span><span class="op">)</span></span>
+<span><span class="co"># 计算真实值与预测值的相关系数</span></span>
+<span><span class="va">cv_cor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">test_data</span><span class="op">$</span><span class="va">stats_score</span>, <span class="va">pred_cv</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 输出结果</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"简单交叉验证结果\n"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>简单交叉验证结果</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb71"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"真实值与预测值的相关系数 ="</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">cv_cor</span>, <span class="fl">4</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>真实值与预测值的相关系数 = 0.5484 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb73"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 2. 双重交叉验证（交换样本，取两次相关系数的平均值）</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># 第一次：训练集1 → 测试集2（已算完：cv_cor）</span></span>
+<span><span class="co"># 第二次：交换 → 测试集1建模，训练集2预测</span></span>
+<span><span class="va">fit_cv2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">stats_score</span> <span class="op">~</span> <span class="va">aptitude</span> <span class="op">+</span> <span class="va">math_base</span> <span class="op">+</span> <span class="va">study_hours</span> <span class="op">+</span> <span class="va">gender</span>, data <span class="op">=</span> <span class="va">test_data</span><span class="op">)</span></span>
+<span><span class="va">pred_cv2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_cv2</span>, newdata <span class="op">=</span> <span class="va">train_data</span><span class="op">)</span></span>
+<span><span class="va">cv_cor2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">train_data</span><span class="op">$</span><span class="va">stats_score</span>, <span class="va">pred_cv2</span><span class="op">)</span></span>
+<span><span class="co"># 双重交叉验证平均值</span></span>
+<span><span class="va">double_cv_cor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">cv_cor</span>, <span class="va">cv_cor2</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"双重交叉验证结果\n"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>双重交叉验证结果</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb75"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"第一次相关系数 ="</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">cv_cor</span>, <span class="fl">4</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>第一次相关系数 = 0.5484 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb77"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"第二次相关系数 ="</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">cv_cor2</span>, <span class="fl">4</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>第二次相关系数 = 0.6222 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb79"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"双重交叉验证平均相关系数 ="</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">double_cv_cor</span>, <span class="fl">4</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>双重交叉验证平均相关系数 = 0.5853 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb81"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 3. PRESS 统计量（留一法：每次剔除1个样本，预测该样本，计算残差平方和）</span></span>
+<span></span>
+<span><span class="va">PRESS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/influence.measures.html">hatvalues</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>  <span class="co"># 留一法残差平方和</span></span>
+<span><span class="va">SSY</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">x_df</span><span class="op">$</span><span class="va">stats_score</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x_df</span><span class="op">$</span><span class="va">stats_score</span><span class="op">)</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="co"># 总平方和</span></span>
+<span><span class="va">press_R2</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">PRESS</span> <span class="op">/</span> <span class="va">SSY</span>  <span class="co"># PRESS 预测R²</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"PRESS 统计量结果\n"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>PRESS 统计量结果</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb83"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"PRESS 统计量（留一残差平方和） ="</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">PRESS</span>, <span class="fl">4</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>PRESS 统计量（留一残差平方和） = 12330.07 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb85"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"PRESS 预测 R² ="</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">press_R2</span>, <span class="fl">4</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>PRESS 预测 R² = 0.3552 </code></pre>
+</div>
+</div>
+
+
+<!-- -->
+
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="../chapters/03-logistic-regression.html" class="pagination-link" aria-label="PART3 Logistic Regression 逻辑回归">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">PART3 Logistic Regression 逻辑回归</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../summary.html" class="pagination-link" aria-label="写在最后">
+        <span class="nav-page-text">写在最后</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb87" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "PART 4 多元线性回归"</span></span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup, include=FALSE}</span></span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"_common.R"</span>))</span>
+<span id="cb87-7"><a href="#cb87-7" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>, <span class="at">message =</span> <span class="cn">FALSE</span>, <span class="at">warning =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb87-8"><a href="#cb87-8" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb87-9"><a href="#cb87-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-10"><a href="#cb87-10" aria-hidden="true" tabindex="-1"></a>::: rmdnote</span>
+<span id="cb87-11"><a href="#cb87-11" aria-hidden="true" tabindex="-1"></a>**什么是多元线性回归**</span>
+<span id="cb87-12"><a href="#cb87-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-13"><a href="#cb87-13" aria-hidden="true" tabindex="-1"></a>多元线性回归是线性回归的扩展形式，用于分析一个连续因变量与两个或更多自变量之间的线性关系。其模型形式为 Y = a + b1X1 + b2X2 + … + bkXk，可同时考察多个因素对结果的影响。</span>
+<span id="cb87-14"><a href="#cb87-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-15"><a href="#cb87-15" aria-hidden="true" tabindex="-1"></a>与一元线性回归相比：一元只含一个自变量，多元含多个；多元能控制混杂变量、评估各因素的独立贡献，而一元易遗漏变量导致偏差；两者均要求线性关系、残差独立正态等前提。</span>
+<span id="cb87-16"><a href="#cb87-16" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb87-17"><a href="#cb87-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-18"><a href="#cb87-18" aria-hidden="true" tabindex="-1"></a><span class="fu">## 10 多元线性回归</span></span>
+<span id="cb87-19"><a href="#cb87-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-20"><a href="#cb87-20" aria-hidden="true" tabindex="-1"></a>作用：用多个影响因素共同预测一个连续结果的变化。</span>
+<span id="cb87-21"><a href="#cb87-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-22"><a href="#cb87-22" aria-hidden="true" tabindex="-1"></a>使用范围：因变量必须是连续型。自变量X优先是连续性数值，也可以是二分类。</span>
+<span id="cb87-23"><a href="#cb87-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-24"><a href="#cb87-24" aria-hidden="true" tabindex="-1"></a>前提假设(但是和别的不一样，前提假设是放到后面的)</span>
+<span id="cb87-25"><a href="#cb87-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-26"><a href="#cb87-26" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>线性关系：每个自变量和因变量之间存在线性关系，自变量之间不存在完美的线性关系；</span>
+<span id="cb87-27"><a href="#cb87-27" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>独立随机抽样：观测值之间相互独立，无自相关</span>
+<span id="cb87-28"><a href="#cb87-28" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>残差正态性：模型残差是Z分布</span>
+<span id="cb87-29"><a href="#cb87-29" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>同方差性：残差的方差不随自变量<span class="sc">\\</span>预测值的变化而变化。</span>
+<span id="cb87-30"><a href="#cb87-30" aria-hidden="true" tabindex="-1"></a><span class="ss">5.  </span>无严重多重共线性：自变量之间不能高度线性相关。</span>
+<span id="cb87-31"><a href="#cb87-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-32"><a href="#cb87-32" aria-hidden="true" tabindex="-1"></a><span class="fu">### 10.1数据准备与清洗</span></span>
+<span id="cb87-33"><a href="#cb87-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-34"><a href="#cb87-34" aria-hidden="true" tabindex="-1"></a>数据导入：将整理好的数据读入分析工具，要求每一行是 1 个观测样本，每一列是 1 个变量（因变量 Y + 所有自变量 X）</span>
+<span id="cb87-35"><a href="#cb87-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-36"><a href="#cb87-36" aria-hidden="true" tabindex="-1"></a>基础清洗：剔除缺失值、重复值，确保变量类型正确（数值型）\</span>
+<span id="cb87-37"><a href="#cb87-37" aria-hidden="true" tabindex="-1"></a>初步异常值筛查：通过散点图、描述统计初步识别极端值，为后续模型诊断做准备。\</span>
+<span id="cb87-38"><a href="#cb87-38" aria-hidden="true" tabindex="-1"></a>*注：这个数据是ai编的，不代表实际情况*</span>
+<span id="cb87-39"><a href="#cb87-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-40"><a href="#cb87-40" aria-hidden="true" tabindex="-1"></a><span class="in">```{r Preparation}</span></span>
+<span id="cb87-41"><a href="#cb87-41" aria-hidden="true" tabindex="-1"></a><span class="co">#Preparation </span></span>
+<span id="cb87-42"><a href="#cb87-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-43"><a href="#cb87-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-44"><a href="#cb87-44" aria-hidden="true" tabindex="-1"></a><span class="co"># upload the data导入数据</span></span>
+<span id="cb87-45"><a href="#cb87-45" aria-hidden="true" tabindex="-1"></a><span class="co">#library(haven)</span></span>
+<span id="cb87-46"><a href="#cb87-46" aria-hidden="true" tabindex="-1"></a>x_df<span class="ot">&lt;-</span><span class="fu">read_sav</span>(<span class="fu">here</span>(<span class="st">"data"</span>,<span class="st">"sav_files"</span>,<span class="st">"MLR_work.sav"</span>))</span>
+<span id="cb87-47"><a href="#cb87-47" aria-hidden="true" tabindex="-1"></a><span class="fu">attach</span>(x_df)</span>
+<span id="cb87-48"><a href="#cb87-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-49"><a href="#cb87-49" aria-hidden="true" tabindex="-1"></a><span class="co"># str(object) 显示R对象（如数据框）的内部结构，包括变量名、类型和前几个观测值</span></span>
+<span id="cb87-50"><a href="#cb87-50" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(x_df)</span>
+<span id="cb87-51"><a href="#cb87-51" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(x_df)</span>
+<span id="cb87-52"><a href="#cb87-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-53"><a href="#cb87-53" aria-hidden="true" tabindex="-1"></a><span class="co"># colSums(is.na(data.frame)) 按列计算缺失值数量，is.na()返回逻辑矩阵，colSums()求和</span></span>
+<span id="cb87-54"><a href="#cb87-54" aria-hidden="true" tabindex="-1"></a>missing_count <span class="ot">&lt;-</span> <span class="fu">colSums</span>(<span class="fu">is.na</span>(x_df))</span>
+<span id="cb87-55"><a href="#cb87-55" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(missing_count)</span>
+<span id="cb87-56"><a href="#cb87-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-57"><a href="#cb87-57" aria-hidden="true" tabindex="-1"></a><span class="co"># 若存在缺失值，可选择删除含缺失值的行（列表删除）</span></span>
+<span id="cb87-58"><a href="#cb87-58" aria-hidden="true" tabindex="-1"></a><span class="co"># na.omit(object) 返回删除任何含有NA值的行后的数据框</span></span>
+<span id="cb87-59"><a href="#cb87-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-60"><a href="#cb87-60" aria-hidden="true" tabindex="-1"></a>gender<span class="ot">&lt;-</span><span class="fu">as.numeric</span>(gender)</span>
+<span id="cb87-61"><a href="#cb87-61" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb87-62"><a href="#cb87-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-63"><a href="#cb87-63" aria-hidden="true" tabindex="-1"></a>或者整理变量矩阵（第一列为因变量Y，后续列为自变量X）<span class="sc">\\</span></span>
+<span id="cb87-64"><a href="#cb87-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-65"><a href="#cb87-65" aria-hidden="true" tabindex="-1"></a>这是另一个例子\</span>
+<span id="cb87-66"><a href="#cb87-66" aria-hidden="true" tabindex="-1"></a>m <span class="sc">\&lt;</span>- matrix(nrow = length(salary), ncol = 5)\</span>
+<span id="cb87-67"><a href="#cb87-67" aria-hidden="true" tabindex="-1"></a>m<span class="sc">\[</span>,1<span class="sc">\]</span> <span class="sc">\&lt;</span>- salary <span class="sc">\#</span> 因变量Y：薪资\</span>
+<span id="cb87-68"><a href="#cb87-68" aria-hidden="true" tabindex="-1"></a>m<span class="sc">\[</span>,2<span class="sc">\]</span> <span class="sc">\&lt;</span>- educ <span class="sc">\#</span> 自变量X1：受教育年限\</span>
+<span id="cb87-69"><a href="#cb87-69" aria-hidden="true" tabindex="-1"></a>m<span class="sc">\[</span>,3<span class="sc">\]</span> <span class="sc">\&lt;</span>- salbegin <span class="sc">\#</span> 自变量X2：起薪\</span>
+<span id="cb87-70"><a href="#cb87-70" aria-hidden="true" tabindex="-1"></a>m<span class="sc">\[</span>,4<span class="sc">\]</span> <span class="sc">\&lt;</span>- jobtime <span class="sc">\#</span> 自变量X3：在职时长\</span>
+<span id="cb87-71"><a href="#cb87-71" aria-hidden="true" tabindex="-1"></a>m<span class="sc">\[</span>,5<span class="sc">\]</span> <span class="sc">\&lt;</span>- prevexp <span class="sc">\#</span> 自变量X4：过往工作经验\</span>
+<span id="cb87-72"><a href="#cb87-72" aria-hidden="true" tabindex="-1"></a>然后一定要注意矩阵，矩阵里是只能放数字的。&nbsp;\</span>
+<span id="cb87-73"><a href="#cb87-73" aria-hidden="true" tabindex="-1"></a>比如有那种二分类的，就把他转成01这样就好&nbsp;\</span>
+<span id="cb87-74"><a href="#cb87-74" aria-hidden="true" tabindex="-1"></a>有个更快的办法是as.matrix()</span>
+<span id="cb87-75"><a href="#cb87-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-76"><a href="#cb87-76" aria-hidden="true" tabindex="-1"></a>\</span>
+<span id="cb87-77"><a href="#cb87-77" aria-hidden="true" tabindex="-1"></a>*别.把.矩.阵.的.英.语.拼.错.了.*</span>
+<span id="cb87-78"><a href="#cb87-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-79"><a href="#cb87-79" aria-hidden="true" tabindex="-1"></a>*我。说。怎。么。老。报。错。*</span>
+<span id="cb87-80"><a href="#cb87-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-81"><a href="#cb87-81" aria-hidden="true" tabindex="-1"></a>*M.A.T.R.I.X*.</span>
+<span id="cb87-82"><a href="#cb87-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-83"><a href="#cb87-83" aria-hidden="true" tabindex="-1"></a><span class="fu">### 10.2 拟合模型前的前置检验</span></span>
+<span id="cb87-84"><a href="#cb87-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-85"><a href="#cb87-85" aria-hidden="true" tabindex="-1"></a>相关性检验：计算所有变量的相关矩阵\</span>
+<span id="cb87-86"><a href="#cb87-86" aria-hidden="true" tabindex="-1"></a>核心目的 1：确认因变量Y和每个自变量X有一定相关性，完全无相关的 X 无需纳入模型； 核心目的 2：初步判断自变量之间的相关性，排查多重共线性风险。</span>
+<span id="cb87-87"><a href="#cb87-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-88"><a href="#cb87-88" aria-hidden="true" tabindex="-1"></a>线性关系检验：绘制每个自变量与因变量的散点图，确认二者存在线性趋势，无明显的非线性关系；</span>
+<span id="cb87-89"><a href="#cb87-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-90"><a href="#cb87-90" aria-hidden="true" tabindex="-1"></a>样本量校验：对照上述样本量标准，确认样本量满足分析要求。\</span>
+<span id="cb87-91"><a href="#cb87-91" aria-hidden="true" tabindex="-1"></a>*样本量校验就用眼睛看（）*</span>
+<span id="cb87-92"><a href="#cb87-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-93"><a href="#cb87-93" aria-hidden="true" tabindex="-1"></a><span class="in">```{r Correaltion-matrix}</span></span>
+<span id="cb87-94"><a href="#cb87-94" aria-hidden="true" tabindex="-1"></a><span class="co">#caculate correlation matrix</span></span>
+<span id="cb87-95"><a href="#cb87-95" aria-hidden="true" tabindex="-1"></a>m<span class="ot">&lt;-</span><span class="fu">as.matrix</span>(x_df)</span>
+<span id="cb87-96"><a href="#cb87-96" aria-hidden="true" tabindex="-1"></a>cor_matrix_mlr<span class="ot">&lt;-</span><span class="fu">cor</span>(m)</span>
+<span id="cb87-97"><a href="#cb87-97" aria-hidden="true" tabindex="-1"></a>cor_matrix_mlr</span>
+<span id="cb87-98"><a href="#cb87-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-99"><a href="#cb87-99" aria-hidden="true" tabindex="-1"></a><span class="co"># 绘制单个自变量与因变量散点图</span></span>
+<span id="cb87-100"><a href="#cb87-100" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(数据框名$自变量名, 数据框名$因变量名,</span></span>
+<span id="cb87-101"><a href="#cb87-101" aria-hidden="true" tabindex="-1"></a>     <span class="co">#main = "自变量X与因变量Y散点图",</span></span>
+<span id="cb87-102"><a href="#cb87-102" aria-hidden="true" tabindex="-1"></a>     <span class="co">#xlab = "自变量X", ylab = "因变量Y")</span></span>
+<span id="cb87-103"><a href="#cb87-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-104"><a href="#cb87-104" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x_df<span class="sc">$</span>aptitude, x_df<span class="sc">$</span>stats_score,</span>
+<span id="cb87-105"><a href="#cb87-105" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"学习倾向得分与考试得分散点图"</span>,</span>
+<span id="cb87-106"><a href="#cb87-106" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"学习倾向得分"</span>, <span class="at">ylab =</span> <span class="st">"考试得分"</span>)</span>
+<span id="cb87-107"><a href="#cb87-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-108"><a href="#cb87-108" aria-hidden="true" tabindex="-1"></a><span class="co"># 添加拟合直线，更清晰看线性趋势</span></span>
+<span id="cb87-109"><a href="#cb87-109" aria-hidden="true" tabindex="-1"></a><span class="co">#abline(lm(因变量名 ~ 自变量名, data = 数据框名), col = "red", lwd = 2)</span></span>
+<span id="cb87-110"><a href="#cb87-110" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(stats_score <span class="sc">~</span> aptitude, <span class="at">data =</span> x_df), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb87-111"><a href="#cb87-111" aria-hidden="true" tabindex="-1"></a><span class="co"># 绘制 性别 与 考试得分 的箱线图</span></span>
+<span id="cb87-112"><a href="#cb87-112" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(x_df<span class="sc">$</span>stats_score <span class="sc">~</span> x_df<span class="sc">$</span>gender,</span>
+<span id="cb87-113"><a href="#cb87-113" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"性别与考试得分箱线图"</span>,</span>
+<span id="cb87-114"><a href="#cb87-114" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"性别"</span>, </span>
+<span id="cb87-115"><a href="#cb87-115" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">"考试得分"</span>,</span>
+<span id="cb87-116"><a href="#cb87-116" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"lightblue"</span>,<span class="st">"salmon"</span>))</span>
+<span id="cb87-117"><a href="#cb87-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-118"><a href="#cb87-118" aria-hidden="true" tabindex="-1"></a><span class="co"># 批量绘制所有自变量与因变量散点图（5列数据用2行3列排版，排的是画出来的小图的板，也就是四个小图放到一个2*3的格子里）</span></span>
+<span id="cb87-119"><a href="#cb87-119" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>))</span>
+<span id="cb87-120"><a href="#cb87-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-121"><a href="#cb87-121" aria-hidden="true" tabindex="-1"></a><span class="co"># 循环绘制每个X与Y的散点图(连续性用散点，不连续用箱线)</span></span>
+<span id="cb87-122"><a href="#cb87-122" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(m)) {</span>
+<span id="cb87-123"><a href="#cb87-123" aria-hidden="true" tabindex="-1"></a>  <span class="co"># plot(自变量, 因变量)</span></span>
+<span id="cb87-124"><a href="#cb87-124" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(m[, i], m[, <span class="dv">1</span>],</span>
+<span id="cb87-125"><a href="#cb87-125" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlab =</span> <span class="fu">colnames</span>(m)[i],</span>
+<span id="cb87-126"><a href="#cb87-126" aria-hidden="true" tabindex="-1"></a>       <span class="at">ylab =</span> <span class="fu">colnames</span>(m)[<span class="dv">1</span>],</span>
+<span id="cb87-127"><a href="#cb87-127" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="fu">paste</span>(<span class="fu">colnames</span>(m)[i], <span class="st">"vs"</span>, <span class="fu">colnames</span>(m)[<span class="dv">1</span>]))</span>
+<span id="cb87-128"><a href="#cb87-128" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 添加线性拟合直线</span></span>
+<span id="cb87-129"><a href="#cb87-129" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="fu">lm</span>(m[, <span class="dv">1</span>] <span class="sc">~</span> m[, i]), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb87-130"><a href="#cb87-130" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb87-131"><a href="#cb87-131" aria-hidden="true" tabindex="-1"></a><span class="co">#画出来不是很好看其实。但也凑活。如果想好看点可以参考下面的</span></span>
+<span id="cb87-132"><a href="#cb87-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-133"><a href="#cb87-133" aria-hidden="true" tabindex="-1"></a>df<span class="ot">&lt;-</span><span class="fu">data.frame</span>(</span>
+<span id="cb87-134"><a href="#cb87-134" aria-hidden="true" tabindex="-1"></a>  学习能力 <span class="ot">=</span> x_df<span class="sc">$</span>aptitude,</span>
+<span id="cb87-135"><a href="#cb87-135" aria-hidden="true" tabindex="-1"></a>  数学基础 <span class="ot">=</span> x_df<span class="sc">$</span>math_base,</span>
+<span id="cb87-136"><a href="#cb87-136" aria-hidden="true" tabindex="-1"></a>  学习时间 <span class="ot">=</span> x_df<span class="sc">$</span>study_hours,</span>
+<span id="cb87-137"><a href="#cb87-137" aria-hidden="true" tabindex="-1"></a>  性别 <span class="ot">=</span> <span class="fu">as.factor</span>(x_df<span class="sc">$</span>gender),<span class="co">#注意，这里有一个很大的区别就是之前的gender是numeric而这个是factor</span></span>
+<span id="cb87-138"><a href="#cb87-138" aria-hidden="true" tabindex="-1"></a>  考试得分 <span class="ot">=</span> x_df<span class="sc">$</span>stats_score</span>
+<span id="cb87-139"><a href="#cb87-139" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb87-140"><a href="#cb87-140" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span>
+<span id="cb87-141"><a href="#cb87-141" aria-hidden="true" tabindex="-1"></a><span class="co"># 加载包（如果没装过，先运行一次下面这句）</span></span>
+<span id="cb87-142"><a href="#cb87-142" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("ggplot2")</span></span>
+<span id="cb87-143"><a href="#cb87-143" aria-hidden="true" tabindex="-1"></a><span class="co">#嘴一句，ggplot2真的是万恶之源。</span></span>
+<span id="cb87-144"><a href="#cb87-144" aria-hidden="true" tabindex="-1"></a><span class="co">#library(ggplot2)</span></span>
+<span id="cb87-145"><a href="#cb87-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-146"><a href="#cb87-146" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------- 美观的图（2×2排版）---------------</span></span>
+<span id="cb87-147"><a href="#cb87-147" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span>学习时间, <span class="at">y=</span>考试得分)) <span class="sc">+</span></span>
+<span id="cb87-148"><a href="#cb87-148" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">"#457b9d"</span>, <span class="at">alpha=</span><span class="fl">0.6</span>, <span class="at">size=</span><span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb87-149"><a href="#cb87-149" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span>lm, <span class="at">se=</span>F, <span class="at">color=</span><span class="st">"#e63946"</span>, <span class="at">linewidth=</span><span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb87-150"><a href="#cb87-150" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"学习时间 vs 成绩"</span>, <span class="at">x=</span><span class="st">"学习时间"</span>, <span class="at">y=</span><span class="st">"考试得分"</span>) <span class="sc">+</span></span>
+<span id="cb87-151"><a href="#cb87-151" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
+<span id="cb87-152"><a href="#cb87-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-153"><a href="#cb87-153" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span>数学基础, <span class="at">y=</span>考试得分)) <span class="sc">+</span></span>
+<span id="cb87-154"><a href="#cb87-154" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">"#457b9d"</span>, <span class="at">alpha=</span><span class="fl">0.6</span>, <span class="at">size=</span><span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb87-155"><a href="#cb87-155" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span>lm, <span class="at">se=</span>F, <span class="at">color=</span><span class="st">"#e63946"</span>, <span class="at">linewidth=</span><span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb87-156"><a href="#cb87-156" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"数学基础 vs 成绩"</span>, <span class="at">x=</span><span class="st">"数学基础"</span>, <span class="at">y=</span><span class="st">"考试得分"</span>) <span class="sc">+</span></span>
+<span id="cb87-157"><a href="#cb87-157" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
+<span id="cb87-158"><a href="#cb87-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-159"><a href="#cb87-159" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span><span class="fu">factor</span>(性别), <span class="at">y=</span>考试得分)) <span class="sc">+</span></span>
+<span id="cb87-160"><a href="#cb87-160" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill=</span><span class="fu">c</span>(<span class="st">"#a8dadc"</span>,<span class="st">"#f1faee"</span>), <span class="at">color=</span><span class="st">"#1d3557"</span>) <span class="sc">+</span></span>
+<span id="cb87-161"><a href="#cb87-161" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"性别 vs 成绩"</span>, <span class="at">x=</span><span class="st">"性别"</span>, <span class="at">y=</span><span class="st">"考试得分"</span>) <span class="sc">+</span></span>
+<span id="cb87-162"><a href="#cb87-162" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
+<span id="cb87-163"><a href="#cb87-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-164"><a href="#cb87-164" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span>学习能力, <span class="at">y=</span>考试得分)) <span class="sc">+</span></span>
+<span id="cb87-165"><a href="#cb87-165" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">"#457b9d"</span>, <span class="at">alpha=</span><span class="fl">0.6</span>, <span class="at">size=</span><span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb87-166"><a href="#cb87-166" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span>lm, <span class="at">se=</span>F, <span class="at">color=</span><span class="st">"#e63946"</span>, <span class="at">linewidth=</span><span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb87-167"><a href="#cb87-167" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"学习能力 vs 成绩"</span>, <span class="at">x=</span><span class="st">"学习能力"</span>, <span class="at">y=</span><span class="st">"考试得分"</span>) <span class="sc">+</span></span>
+<span id="cb87-168"><a href="#cb87-168" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
+<span id="cb87-169"><a href="#cb87-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-170"><a href="#cb87-170" aria-hidden="true" tabindex="-1"></a><span class="co"># 组合成 2×2 拼图</span></span>
+<span id="cb87-171"><a href="#cb87-171" aria-hidden="true" tabindex="-1"></a><span class="co">#library(gridExtra)</span></span>
+<span id="cb87-172"><a href="#cb87-172" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p1, p2, p3, p4, <span class="at">ncol=</span><span class="dv">2</span>, <span class="at">nrow=</span><span class="dv">2</span>)</span>
+<span id="cb87-173"><a href="#cb87-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-174"><a href="#cb87-174" aria-hidden="true" tabindex="-1"></a><span class="co">#其实颜色这一块有个小妙招（井号加一个三位数一般也是一个好看的颜色）</span></span>
+<span id="cb87-175"><a href="#cb87-175" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb87-176"><a href="#cb87-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-177"><a href="#cb87-177" aria-hidden="true" tabindex="-1"></a><span class="fu">### 10.3 拟合多元线性回归模型</span></span>
+<span id="cb87-178"><a href="#cb87-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-179"><a href="#cb87-179" aria-hidden="true" tabindex="-1"></a>核心模型公式：原始分数模型（非标准化）： $$Y=α+β_1X_1+β_2X_2+...+β_pX_p+e$$\</span>
+<span id="cb87-180"><a href="#cb87-180" aria-hidden="true" tabindex="-1"></a>α：截距，所有自变量为 0 时 Y 的预测值；&nbsp;</span>
+<span id="cb87-181"><a href="#cb87-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-182"><a href="#cb87-182" aria-hidden="true" tabindex="-1"></a>β₁\~βₚ：非标准化回归系数，X 每变化 1 个单位，Y 的变化量\</span>
+<span id="cb87-183"><a href="#cb87-183" aria-hidden="true" tabindex="-1"></a>e：残差，服从均值为 0、方差为 σ² 的正态分布。</span>
+<span id="cb87-184"><a href="#cb87-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-185"><a href="#cb87-185" aria-hidden="true" tabindex="-1"></a>\</span>
+<span id="cb87-186"><a href="#cb87-186" aria-hidden="true" tabindex="-1"></a>散点图大家都能看出来，那就讲解箱线图怎么看\</span>
+<span id="cb87-187"><a href="#cb87-187" aria-hidden="true" tabindex="-1"></a>箱体就是中间的长方形，箱体高度代表数据的离散程度：\</span>
+<span id="cb87-188"><a href="#cb87-188" aria-hidden="true" tabindex="-1"></a>箱体越高，数据越分散；越低，数据越集中 下沿 = Q1（第 25 百分位数），\</span>
+<span id="cb87-189"><a href="#cb87-189" aria-hidden="true" tabindex="-1"></a>上沿 = Q3（第 75 百分位数）</span>
+<span id="cb87-190"><a href="#cb87-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-191"><a href="#cb87-191" aria-hidden="true" tabindex="-1"></a>\</span>
+<span id="cb87-192"><a href="#cb87-192" aria-hidden="true" tabindex="-1"></a>R²（多重决定系数）：模型解释的 Y 的变异 <span class="sc">\\</span> Y 的总变异，取值 0\~1，越接近 1 说明模型解释力越强； 当自变量之间完全不相关时，R²= 每个自变量与 Y 的相关系数的平方和； 当自变量之间相关时，需扣除重叠的方差，R² 小于平方和。</span>
+<span id="cb87-193"><a href="#cb87-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-194"><a href="#cb87-194" aria-hidden="true" tabindex="-1"></a>调整 R²：对 R² 进行校正，处决多余的自变量（自变量越多，R² 会虚高），公式为：Radj2=R2−N−P−1P(1−R2)是评价模型真实解释力的核心指标，</span>
+<span id="cb87-195"><a href="#cb87-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-196"><a href="#cb87-196" aria-hidden="true" tabindex="-1"></a>本节课给出的评价标准：</span>
+<span id="cb87-197"><a href="#cb87-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-198"><a href="#cb87-198" aria-hidden="true" tabindex="-1"></a>调整 R²<span class="sc">\&gt;</span>75%：非常好，夯；50%-75%：好，人上人；25%-50%：尚可，NPC；<span class="sc">\&lt;</span>25%：解释力不足，拉完了。</span>
+<span id="cb87-199"><a href="#cb87-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-200"><a href="#cb87-200" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 10.3.1拟合非标准化多元线性回归模型</span></span>
+<span id="cb87-201"><a href="#cb87-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-202"><a href="#cb87-202" aria-hidden="true" tabindex="-1"></a><span class="in">```{r Model-fitting}</span></span>
+<span id="cb87-203"><a href="#cb87-203" aria-hidden="true" tabindex="-1"></a><span class="co">#模型fit&lt;-lm(因变量~自变量1+自变量2+...+自变量n,data=df)</span></span>
+<span id="cb87-204"><a href="#cb87-204" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit)</span></span>
+<span id="cb87-205"><a href="#cb87-205" aria-hidden="true" tabindex="-1"></a>gender<span class="ot">=</span><span class="fu">factor</span>(gender)</span>
+<span id="cb87-206"><a href="#cb87-206" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(stats_score<span class="sc">~</span> aptitude <span class="sc">+</span> math_base <span class="sc">+</span> study_hours <span class="sc">+</span> gender, <span class="at">data =</span> x_df) </span>
+<span id="cb87-207"><a href="#cb87-207" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span>
+<span id="cb87-208"><a href="#cb87-208" aria-hidden="true" tabindex="-1"></a><span class="fu">coefficients</span>(fit)</span>
+<span id="cb87-209"><a href="#cb87-209" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb87-210"><a href="#cb87-210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-211"><a href="#cb87-211" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 10.3.2 拟合标准化回归模型</span></span>
+<span id="cb87-212"><a href="#cb87-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-213"><a href="#cb87-213" aria-hidden="true" tabindex="-1"></a>（获取Beta权重，比较自变量贡献） 标准化模型（Beta 权重版）： $$Zy^=B1Zx1+B2Zx2+...+BpZxp$$ B₁\~Bₚ：标准化回归系数（Beta 权重），消除了量纲影响，可直接比较不同自变量对 Y 的贡献大小；\</span>
+<span id="cb87-214"><a href="#cb87-214" aria-hidden="true" tabindex="-1"></a>含义：控制其他自变量不变时，该 X 每变化 1 个标准差，Y 的变化量。 核心解释力指标\</span>
+<span id="cb87-215"><a href="#cb87-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-216"><a href="#cb87-216" aria-hidden="true" tabindex="-1"></a><span class="in">```{r Model-fitting-scale}</span></span>
+<span id="cb87-217"><a href="#cb87-217" aria-hidden="true" tabindex="-1"></a><span class="co">#模型和之前一样，只不过把所有的变量放到scale()里了</span></span>
+<span id="cb87-218"><a href="#cb87-218" aria-hidden="true" tabindex="-1"></a>fit_std <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">scale</span>(stats_score) <span class="sc">~</span> <span class="fu">scale</span>(aptitude) <span class="sc">+</span> <span class="fu">scale</span>(math_base) <span class="sc">+</span> <span class="fu">scale</span>(study_hours) , <span class="at">data =</span> x_df)</span>
+<span id="cb87-219"><a href="#cb87-219" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看标准化模型结果</span></span>
+<span id="cb87-220"><a href="#cb87-220" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_std)</span>
+<span id="cb87-221"><a href="#cb87-221" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取标准化Beta系数</span></span>
+<span id="cb87-222"><a href="#cb87-222" aria-hidden="true" tabindex="-1"></a><span class="fu">coefficients</span>(fit_std)</span>
+<span id="cb87-223"><a href="#cb87-223" aria-hidden="true" tabindex="-1"></a><span class="co">#!!!注意，二分类变量是不能被标准化的</span></span>
+<span id="cb87-224"><a href="#cb87-224" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb87-225"><a href="#cb87-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-226"><a href="#cb87-226" aria-hidden="true" tabindex="-1"></a><span class="fu">### 10.4 模型与变量的显著性检验</span></span>
+<span id="cb87-227"><a href="#cb87-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-228"><a href="#cb87-228" aria-hidden="true" tabindex="-1"></a>模型整体显著性检验（F 检验）</span>
+<span id="cb87-229"><a href="#cb87-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-230"><a href="#cb87-230" aria-hidden="true" tabindex="-1"></a>原假设 H₀：所有自变量的回归系数均为 0，模型无预测效果；</span>
+<span id="cb87-231"><a href="#cb87-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-232"><a href="#cb87-232" aria-hidden="true" tabindex="-1"></a>计算公式：F=(1−R2)<span class="sc">\\</span>(N−P−1)R2<span class="sc">\\</span>P</span>
+<span id="cb87-233"><a href="#cb87-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-234"><a href="#cb87-234" aria-hidden="true" tabindex="-1"></a>自由度：分子 df=P（自变量个数），分母 df=N-P-1；</span>
+<span id="cb87-235"><a href="#cb87-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-236"><a href="#cb87-236" aria-hidden="true" tabindex="-1"></a>结果判断：F 值对应的 p 值 <span class="sc">\&lt;</span> 0.05，说明模型整体具有统计学显著性。</span>
+<span id="cb87-237"><a href="#cb87-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-238"><a href="#cb87-238" aria-hidden="true" tabindex="-1"></a>单个自变量的显著性检验（t 检验）</span>
+<span id="cb87-239"><a href="#cb87-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-240"><a href="#cb87-240" aria-hidden="true" tabindex="-1"></a>原假设 H₀：控制其他自变量不变时，该自变量的回归系数为 0，无独立影响；</span>
+<span id="cb87-241"><a href="#cb87-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-242"><a href="#cb87-242" aria-hidden="true" tabindex="-1"></a>自由度：df=N-P-1；</span>
+<span id="cb87-243"><a href="#cb87-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-244"><a href="#cb87-244" aria-hidden="true" tabindex="-1"></a>结果判断：t 值对应的 p 值 <span class="sc">\&lt;</span> 0.05，说明该自变量的独立影响具有统计学显著性。</span>
+<span id="cb87-245"><a href="#cb87-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-246"><a href="#cb87-246" aria-hidden="true" tabindex="-1"></a><span class="in">```{r Significance-test}</span></span>
+<span id="cb87-247"><a href="#cb87-247" aria-hidden="true" tabindex="-1"></a><span class="co">#模型与变量显著性检验</span></span>
+<span id="cb87-248"><a href="#cb87-248" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 先拟合【非标准化基准模型】</span></span>
+<span id="cb87-249"><a href="#cb87-249" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(stats_score <span class="sc">~</span> aptitude <span class="sc">+</span> math_base <span class="sc">+</span> study_hours <span class="sc">+</span> gender, <span class="at">data =</span> x_df)</span>
+<span id="cb87-250"><a href="#cb87-250" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-251"><a href="#cb87-251" aria-hidden="true" tabindex="-1"></a><span class="co"># 一、模型整体显著性检验（F 检验）</span></span>
+<span id="cb87-252"><a href="#cb87-252" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-253"><a href="#cb87-253" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)<span class="sc">$</span>fstatistic  <span class="co"># 提取F值、分子自由度df1、分母自由度df2</span></span>
+<span id="cb87-254"><a href="#cb87-254" aria-hidden="true" tabindex="-1"></a><span class="fu">pf</span>(<span class="fu">summary</span>(fit)<span class="sc">$</span>fstatistic[<span class="dv">1</span>], </span>
+<span id="cb87-255"><a href="#cb87-255" aria-hidden="true" tabindex="-1"></a>   <span class="at">df1 =</span> <span class="fu">summary</span>(fit)<span class="sc">$</span>fstatistic[<span class="dv">2</span>], </span>
+<span id="cb87-256"><a href="#cb87-256" aria-hidden="true" tabindex="-1"></a>   <span class="at">df2 =</span> <span class="fu">summary</span>(fit)<span class="sc">$</span>fstatistic[<span class="dv">3</span>], </span>
+<span id="cb87-257"><a href="#cb87-257" aria-hidden="true" tabindex="-1"></a>   <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)  <span class="co"># 计算F检验对应的p值</span></span>
+<span id="cb87-258"><a href="#cb87-258" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-259"><a href="#cb87-259" aria-hidden="true" tabindex="-1"></a><span class="co"># 手算F值</span></span>
+<span id="cb87-260"><a href="#cb87-260" aria-hidden="true" tabindex="-1"></a>R2 <span class="ot">&lt;-</span> <span class="fu">summary</span>(fit)<span class="sc">$</span>r.squared  <span class="co"># 决定系数R²</span></span>
+<span id="cb87-261"><a href="#cb87-261" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="fu">nrow</span>(x_df)               <span class="co"># 样本量N</span></span>
+<span id="cb87-262"><a href="#cb87-262" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> <span class="dv">4</span>                        <span class="co"># 自变量个数P</span></span>
+<span id="cb87-263"><a href="#cb87-263" aria-hidden="true" tabindex="-1"></a>F_manual <span class="ot">&lt;-</span> (R2 <span class="sc">/</span> P) <span class="sc">/</span> ((<span class="dv">1</span> <span class="sc">-</span> R2) <span class="sc">/</span> (N <span class="sc">-</span> P <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb87-264"><a href="#cb87-264" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"手动公式计算F值 ="</span>, F_manual, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb87-265"><a href="#cb87-265" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-266"><a href="#cb87-266" aria-hidden="true" tabindex="-1"></a><span class="co"># 二、单个自变量显著性检验（t 检验）</span></span>
+<span id="cb87-267"><a href="#cb87-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-268"><a href="#cb87-268" aria-hidden="true" tabindex="-1"></a>coef_table <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(fit))  <span class="co"># 提取系数表（含t值、p值）</span></span>
+<span id="cb87-269"><a href="#cb87-269" aria-hidden="true" tabindex="-1"></a>coef_table                       <span class="co"># 输出：估计值、标准误、t值、p值</span></span>
+<span id="cb87-270"><a href="#cb87-270" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-271"><a href="#cb87-271" aria-hidden="true" tabindex="-1"></a><span class="co"># 单独提取t值和p值（精准查看）</span></span>
+<span id="cb87-272"><a href="#cb87-272" aria-hidden="true" tabindex="-1"></a>t_values <span class="ot">&lt;-</span> coef_table[, <span class="st">"t value"</span>]</span>
+<span id="cb87-273"><a href="#cb87-273" aria-hidden="true" tabindex="-1"></a>p_values <span class="ot">&lt;-</span> coef_table[, <span class="st">"Pr(&gt;|t|)"</span>]</span>
+<span id="cb87-274"><a href="#cb87-274" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"自变量t值：</span><span class="sc">\n</span><span class="st">"</span>); <span class="fu">print</span>(t_values)</span>
+<span id="cb87-275"><a href="#cb87-275" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"自变量p值：</span><span class="sc">\n</span><span class="st">"</span>); <span class="fu">print</span>(p_values)</span>
+<span id="cb87-276"><a href="#cb87-276" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb87-277"><a href="#cb87-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-278"><a href="#cb87-278" aria-hidden="true" tabindex="-1"></a><span class="fu">### 10.5偏相关 &amp; 半偏相关</span></span>
+<span id="cb87-279"><a href="#cb87-279" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-280"><a href="#cb87-280" aria-hidden="true" tabindex="-1"></a>半偏相关（sr，部分相关）：扣除其他自变量对该 X 的影响后，X 与原始 Y 的相关。</span>
+<span id="cb87-281"><a href="#cb87-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-282"><a href="#cb87-282" aria-hidden="true" tabindex="-1"></a><span class="sc">\#</span> 计算半偏相关</span>
+<span id="cb87-283"><a href="#cb87-283" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-284"><a href="#cb87-284" aria-hidden="true" tabindex="-1"></a>spcor_result <span class="sc">\&lt;</span>- spcor(m) spcor_result\</span>
+<span id="cb87-285"><a href="#cb87-285" aria-hidden="true" tabindex="-1"></a>estimate <span class="sc">\#</span> 半偏相关系数矩阵 spcor_result\</span>
+<span id="cb87-286"><a href="#cb87-286" aria-hidden="true" tabindex="-1"></a>p.value <span class="sc">\#</span> 半偏相关对应的p值</span>
+<span id="cb87-287"><a href="#cb87-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-288"><a href="#cb87-288" aria-hidden="true" tabindex="-1"></a>偏相关（pr）：扣除其他自变量对 X 和 Y 两者的影响后，X 与 Y 的净相关</span>
+<span id="cb87-289"><a href="#cb87-289" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-290"><a href="#cb87-290" aria-hidden="true" tabindex="-1"></a><span class="sc">\#</span> 计算偏相关\</span>
+<span id="cb87-291"><a href="#cb87-291" aria-hidden="true" tabindex="-1"></a>pcor_result <span class="sc">\&lt;</span>- pcor(m) pcor_result</span>
+<span id="cb87-292"><a href="#cb87-292" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-293"><a href="#cb87-293" aria-hidden="true" tabindex="-1"></a>estimate <span class="sc">\#</span> 偏相关系数矩阵 pcor_result</span>
+<span id="cb87-294"><a href="#cb87-294" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-295"><a href="#cb87-295" aria-hidden="true" tabindex="-1"></a><span class="in">```{r Partial-Semipartial}</span></span>
+<span id="cb87-296"><a href="#cb87-296" aria-hidden="true" tabindex="-1"></a><span class="co">#半偏相关（部分相关 sr）计算 </span></span>
+<span id="cb87-297"><a href="#cb87-297" aria-hidden="true" tabindex="-1"></a><span class="co">#library(ppcor)</span></span>
+<span id="cb87-298"><a href="#cb87-298" aria-hidden="true" tabindex="-1"></a><span class="co"># 函数：spcor(矩阵)  计算半偏相关系数+对应p值</span></span>
+<span id="cb87-299"><a href="#cb87-299" aria-hidden="true" tabindex="-1"></a><span class="co"># 含义：扣除其他自变量对该X的影响后，X与原始Y的相关</span></span>
+<span id="cb87-300"><a href="#cb87-300" aria-hidden="true" tabindex="-1"></a>spcor_result <span class="ot">&lt;-</span> <span class="fu">spcor</span>(m)</span>
+<span id="cb87-301"><a href="#cb87-301" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取半偏相关系数</span></span>
+<span id="cb87-302"><a href="#cb87-302" aria-hidden="true" tabindex="-1"></a>spcor_estimate <span class="ot">&lt;-</span> spcor_result<span class="sc">$</span>estimate</span>
+<span id="cb87-303"><a href="#cb87-303" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取半偏相关显著性p值</span></span>
+<span id="cb87-304"><a href="#cb87-304" aria-hidden="true" tabindex="-1"></a>spcor_p <span class="ot">&lt;-</span> spcor_result<span class="sc">$</span>p.value</span>
+<span id="cb87-305"><a href="#cb87-305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-306"><a href="#cb87-306" aria-hidden="true" tabindex="-1"></a><span class="co"># 输出结果</span></span>
+<span id="cb87-307"><a href="#cb87-307" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"半偏相关系数矩阵 </span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb87-308"><a href="#cb87-308" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(spcor_estimate)</span>
+<span id="cb87-309"><a href="#cb87-309" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">" 半偏相关p值矩阵 </span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb87-310"><a href="#cb87-310" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(spcor_p)</span>
+<span id="cb87-311"><a href="#cb87-311" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-312"><a href="#cb87-312" aria-hidden="true" tabindex="-1"></a><span class="co"># 偏相关（pr）计算</span></span>
+<span id="cb87-313"><a href="#cb87-313" aria-hidden="true" tabindex="-1"></a><span class="co"># 函数：pcor(矩阵)  计算偏相关系数+对应p值</span></span>
+<span id="cb87-314"><a href="#cb87-314" aria-hidden="true" tabindex="-1"></a><span class="co"># 含义：扣除其他自变量对X和Y两者的影响后，X与Y的净相关</span></span>
+<span id="cb87-315"><a href="#cb87-315" aria-hidden="true" tabindex="-1"></a>pcor_result <span class="ot">&lt;-</span> <span class="fu">pcor</span>(m)</span>
+<span id="cb87-316"><a href="#cb87-316" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取偏相关系数</span></span>
+<span id="cb87-317"><a href="#cb87-317" aria-hidden="true" tabindex="-1"></a>pcor_estimate <span class="ot">&lt;-</span> pcor_result<span class="sc">$</span>estimate</span>
+<span id="cb87-318"><a href="#cb87-318" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取偏相关显著性p值</span></span>
+<span id="cb87-319"><a href="#cb87-319" aria-hidden="true" tabindex="-1"></a>pcor_p <span class="ot">&lt;-</span> pcor_result<span class="sc">$</span>p.value</span>
+<span id="cb87-320"><a href="#cb87-320" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-321"><a href="#cb87-321" aria-hidden="true" tabindex="-1"></a><span class="co"># 输出结果</span></span>
+<span id="cb87-322"><a href="#cb87-322" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"偏相关系数矩阵</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb87-323"><a href="#cb87-323" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(pcor_estimate)</span>
+<span id="cb87-324"><a href="#cb87-324" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"偏相关p值矩阵</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb87-325"><a href="#cb87-325" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(pcor_p)</span>
+<span id="cb87-326"><a href="#cb87-326" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb87-327"><a href="#cb87-327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-328"><a href="#cb87-328" aria-hidden="true" tabindex="-1"></a><span class="fu">### 10.6模型诊断与前提假设检验</span></span>
+<span id="cb87-329"><a href="#cb87-329" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-330"><a href="#cb87-330" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>多重共线性检验\</span>
+<span id="cb87-331"><a href="#cb87-331" aria-hidden="true" tabindex="-1"></a>    核心指标：容忍度（Tolerance）、方差膨胀因子（VIF） 计算公式：容忍度=1-Rc²（Rc²= 该自变量被其他所有自变量预测的 R²），VIF=1<span class="sc">\\</span>容忍度\</span>
+<span id="cb87-332"><a href="#cb87-332" aria-hidden="true" tabindex="-1"></a>    判断标准：容忍度 <span class="sc">\&lt;</span>0.2 提示潜在多重共线性，<span class="sc">\&lt;</span>0.1 为严重多重共线性；VIF<span class="sc">\&gt;</span>5 为严重多重共线性。</span>
+<span id="cb87-333"><a href="#cb87-333" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-334"><a href="#cb87-334" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>残差正态性检验：绘制残差直方图、标准化残差 QQ 图，QQ 图上的点越贴近对角线，说明残差正态性越好。</span>
+<span id="cb87-335"><a href="#cb87-335" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-336"><a href="#cb87-336" aria-hidden="true" tabindex="-1"></a>    hist(resid) <span class="sc">\#</span> 残差直方图</span>
+<span id="cb87-337"><a href="#cb87-337" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-338"><a href="#cb87-338" aria-hidden="true" tabindex="-1"></a>    plot(fit, which = 2) <span class="sc">\#</span> 标准化残差QQ图</span>
+<span id="cb87-339"><a href="#cb87-339" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-340"><a href="#cb87-340" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>同方差性检验：绘制残差 vs 拟合值的散点图，残差随机分布在 0 线上下、无明显趋势（如漏斗形），说明满足同方差性。</span>
+<span id="cb87-341"><a href="#cb87-341" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-342"><a href="#cb87-342" aria-hidden="true" tabindex="-1"></a>    plot(fit, which = 1) <span class="sc">\#</span> 残差vs拟合值散点图异常值与强影响点检验\</span>
+<span id="cb87-343"><a href="#cb87-343" aria-hidden="true" tabindex="-1"></a>    残差值：绝对值越大，越可能是异常值；\</span>
+<span id="cb87-344"><a href="#cb87-344" aria-hidden="true" tabindex="-1"></a>    Cook 距离：<span class="sc">\&gt;</span>1 提示为强影响点，会显著改变模型结果；\</span>
+<span id="cb87-345"><a href="#cb87-345" aria-hidden="true" tabindex="-1"></a>    杠杆值（Hat 值）：超过平均值 2-3 倍为高杠杆点，平均值 =(P+1)<span class="sc">\\</span>N；\</span>
+<span id="cb87-346"><a href="#cb87-346" aria-hidden="true" tabindex="-1"></a>    马氏距离：衡量样本离自变量均值的距离，过大提示为多元异常值</span>
+<span id="cb87-347"><a href="#cb87-347" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-348"><a href="#cb87-348" aria-hidden="true" tabindex="-1"></a>多重共线性核心公式 $$Tolerance = 1 - R_C^2 \quad \text{VIF} = \frac{1}{\text{Tolerance}}$$</span>
+<span id="cb87-349"><a href="#cb87-349" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-352"><a href="#cb87-352" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb87-353"><a href="#cb87-353" aria-hidden="true" tabindex="-1"></a><span class="co">#步骤6 模型诊断与前提假设检验 </span></span>
+<span id="cb87-354"><a href="#cb87-354" aria-hidden="true" tabindex="-1"></a><span class="co"># 加载必备包（car包用于VIF计算，课件标准方法）</span></span>
+<span id="cb87-355"><a href="#cb87-355" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("car")</span></span>
+<span id="cb87-356"><a href="#cb87-356" aria-hidden="true" tabindex="-1"></a><span class="co">#library(car)</span></span>
+<span id="cb87-357"><a href="#cb87-357" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-358"><a href="#cb87-358" aria-hidden="true" tabindex="-1"></a><span class="co"># 沿用已拟合的非标准化回归模型（与前序步骤一致）</span></span>
+<span id="cb87-359"><a href="#cb87-359" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(stats_score <span class="sc">~</span> aptitude <span class="sc">+</span> math_base <span class="sc">+</span> study_hours <span class="sc">+</span> gender, <span class="at">data =</span> x_df)</span>
+<span id="cb87-360"><a href="#cb87-360" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-361"><a href="#cb87-361" aria-hidden="true" tabindex="-1"></a><span class="co">#1. 多重共线性检验</span></span>
+<span id="cb87-362"><a href="#cb87-362" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算方差膨胀因子VIF</span></span>
+<span id="cb87-363"><a href="#cb87-363" aria-hidden="true" tabindex="-1"></a>vif_result <span class="ot">&lt;-</span> <span class="fu">vif</span>(fit)</span>
+<span id="cb87-364"><a href="#cb87-364" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算容忍度 Tolerance = 1\VIF</span></span>
+<span id="cb87-365"><a href="#cb87-365" aria-hidden="true" tabindex="-1"></a>tolerance_result <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> vif_result</span>
+<span id="cb87-366"><a href="#cb87-366" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-367"><a href="#cb87-367" aria-hidden="true" tabindex="-1"></a><span class="co"># 输出多重共线性结果</span></span>
+<span id="cb87-368"><a href="#cb87-368" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"多重共线性检验结果</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb87-369"><a href="#cb87-369" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"方差膨胀因子VIF：</span><span class="sc">\n</span><span class="st">"</span>); <span class="fu">print</span>(vif_result)</span>
+<span id="cb87-370"><a href="#cb87-370" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"容忍度Tolerance：</span><span class="sc">\n</span><span class="st">"</span>); <span class="fu">print</span>(tolerance_result)</span>
+<span id="cb87-371"><a href="#cb87-371" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-372"><a href="#cb87-372" aria-hidden="true" tabindex="-1"></a><span class="co">#2. 残差正态性检验</span></span>
+<span id="cb87-373"><a href="#cb87-373" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取模型残差</span></span>
+<span id="cb87-374"><a href="#cb87-374" aria-hidden="true" tabindex="-1"></a>resid <span class="ot">&lt;-</span> <span class="fu">residuals</span>(fit)</span>
+<span id="cb87-375"><a href="#cb87-375" aria-hidden="true" tabindex="-1"></a><span class="co"># 残差直方图</span></span>
+<span id="cb87-376"><a href="#cb87-376" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(resid, <span class="at">main =</span> <span class="st">"残差直方图"</span>, <span class="at">xlab =</span> <span class="st">"残差值"</span>)</span>
+<span id="cb87-377"><a href="#cb87-377" aria-hidden="true" tabindex="-1"></a><span class="co"># 标准化残差QQ图（代码：plot(fit, which = 2)）</span></span>
+<span id="cb87-378"><a href="#cb87-378" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">which =</span> <span class="dv">2</span>, <span class="at">main =</span> <span class="st">"标准化残差QQ图"</span>)</span>
+<span id="cb87-379"><a href="#cb87-379" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-380"><a href="#cb87-380" aria-hidden="true" tabindex="-1"></a><span class="co">#3. 同方差性检验</span></span>
+<span id="cb87-381"><a href="#cb87-381" aria-hidden="true" tabindex="-1"></a><span class="co"># 残差vs拟合值散点图（代码：plot(fit, which = 1)）</span></span>
+<span id="cb87-382"><a href="#cb87-382" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">which =</span> <span class="dv">1</span>, <span class="at">main =</span> <span class="st">"残差vs拟合值散点图"</span>)</span>
+<span id="cb87-383"><a href="#cb87-383" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-384"><a href="#cb87-384" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 异常值与强影响点检</span></span>
+<span id="cb87-385"><a href="#cb87-385" aria-hidden="true" tabindex="-1"></a><span class="co"># 残差值（绝对值越大越可能异常）</span></span>
+<span id="cb87-386"><a href="#cb87-386" aria-hidden="true" tabindex="-1"></a>resid_abs <span class="ot">&lt;-</span> <span class="fu">abs</span>(resid)</span>
+<span id="cb87-387"><a href="#cb87-387" aria-hidden="true" tabindex="-1"></a><span class="co"># Cook距离（&gt;1为强影响点）</span></span>
+<span id="cb87-388"><a href="#cb87-388" aria-hidden="true" tabindex="-1"></a>cook_result <span class="ot">&lt;-</span> <span class="fu">cooks.distance</span>(fit)</span>
+<span id="cb87-389"><a href="#cb87-389" aria-hidden="true" tabindex="-1"></a><span class="co"># 杠杆值Hat值（平均值=(P+1)\N，超2-3倍为高杠杆）</span></span>
+<span id="cb87-390"><a href="#cb87-390" aria-hidden="true" tabindex="-1"></a>hat_result <span class="ot">&lt;-</span> <span class="fu">hatvalues</span>(fit)</span>
+<span id="cb87-391"><a href="#cb87-391" aria-hidden="true" tabindex="-1"></a>hat_mean <span class="ot">&lt;-</span> (<span class="fu">length</span>(<span class="fu">coef</span>(fit)))<span class="sc">/</span><span class="fu">nrow</span>(x_df)  <span class="co"># (P+1)\N</span></span>
+<span id="cb87-392"><a href="#cb87-392" aria-hidden="true" tabindex="-1"></a><span class="co"># 马氏距离（多元异常值检验）</span></span>
+<span id="cb87-393"><a href="#cb87-393" aria-hidden="true" tabindex="-1"></a>x_matrix <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(fit)[, <span class="sc">-</span><span class="dv">1</span>]  <span class="co"># 提取自变量矩阵</span></span>
+<span id="cb87-394"><a href="#cb87-394" aria-hidden="true" tabindex="-1"></a>mahal_result <span class="ot">&lt;-</span> <span class="fu">mahalanobis</span>(x_matrix, <span class="fu">colMeans</span>(x_matrix), <span class="fu">cov</span>(x_matrix))</span>
+<span id="cb87-395"><a href="#cb87-395" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-396"><a href="#cb87-396" aria-hidden="true" tabindex="-1"></a><span class="co"># 输出异常值核心结果</span></span>
+<span id="cb87-397"><a href="#cb87-397" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"异常值检验核心指标</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb87-398"><a href="#cb87-398" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"杠杆值平均值："</span>, hat_mean, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb87-399"><a href="#cb87-399" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Cook距离最大值："</span>, <span class="fu">max</span>(cook_result), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb87-400"><a href="#cb87-400" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb87-401"><a href="#cb87-401" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-402"><a href="#cb87-402" aria-hidden="true" tabindex="-1"></a><span class="fu">### 10.7 模型预测力的收缩估计</span></span>
+<span id="cb87-403"><a href="#cb87-403" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-404"><a href="#cb87-404" aria-hidden="true" tabindex="-1"></a>交叉验证：将样本拆分为两半，一半拟合模型，一半做预测，计算真实值与预测值的相关系数；</span>
+<span id="cb87-405"><a href="#cb87-405" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-406"><a href="#cb87-406" aria-hidden="true" tabindex="-1"></a>双重交叉验证：交换两半样本重复上述操作，取两个相关系数的平均值；</span>
+<span id="cb87-407"><a href="#cb87-407" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-408"><a href="#cb87-408" aria-hidden="true" tabindex="-1"></a>PRESS 统计量：每次留 1 个样本，用剩下的 N-1 个样本拟合模型预测该样本，重复 N 次，计算残差平方和。\</span>
+<span id="cb87-409"><a href="#cb87-409" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-412"><a href="#cb87-412" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb87-413"><a href="#cb87-413" aria-hidden="true" tabindex="-1"></a><span class="co"># 模型预测力的收缩估计 </span></span>
+<span id="cb87-414"><a href="#cb87-414" aria-hidden="true" tabindex="-1"></a><span class="co"># 沿用之前的基准回归模型</span></span>
+<span id="cb87-415"><a href="#cb87-415" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(stats_score <span class="sc">~</span> aptitude <span class="sc">+</span> math_base <span class="sc">+</span> study_hours <span class="sc">+</span> gender, <span class="at">data =</span> x_df)</span>
+<span id="cb87-416"><a href="#cb87-416" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>) <span class="co"># 固定随机数，结果可重复</span></span>
+<span id="cb87-417"><a href="#cb87-417" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-418"><a href="#cb87-418" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-419"><a href="#cb87-419" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 简单交叉验证（样本拆分：一半建模，一半预测）</span></span>
+<span id="cb87-420"><a href="#cb87-420" aria-hidden="true" tabindex="-1"></a><span class="co"># 方法：将数据随机分为训练集(50%)、测试集(50%)，计算真实值与预测值的相关系数</span></span>
+<span id="cb87-421"><a href="#cb87-421" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-422"><a href="#cb87-422" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(x_df)</span>
+<span id="cb87-423"><a href="#cb87-423" aria-hidden="true" tabindex="-1"></a>train_idx <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="at">size =</span> n<span class="sc">/</span><span class="dv">2</span>)  <span class="co"># 随机抽取50%样本作为训练集</span></span>
+<span id="cb87-424"><a href="#cb87-424" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> x_df[train_idx, ]</span>
+<span id="cb87-425"><a href="#cb87-425" aria-hidden="true" tabindex="-1"></a>test_data  <span class="ot">&lt;-</span> x_df[<span class="sc">-</span>train_idx, ]</span>
+<span id="cb87-426"><a href="#cb87-426" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-427"><a href="#cb87-427" aria-hidden="true" tabindex="-1"></a><span class="co"># 训练集拟合模型，测试集预测</span></span>
+<span id="cb87-428"><a href="#cb87-428" aria-hidden="true" tabindex="-1"></a>fit_cv <span class="ot">&lt;-</span> <span class="fu">lm</span>(stats_score <span class="sc">~</span> aptitude <span class="sc">+</span> math_base <span class="sc">+</span> study_hours <span class="sc">+</span> gender, <span class="at">data =</span> train_data)</span>
+<span id="cb87-429"><a href="#cb87-429" aria-hidden="true" tabindex="-1"></a>pred_cv <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit_cv, <span class="at">newdata =</span> test_data)</span>
+<span id="cb87-430"><a href="#cb87-430" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算真实值与预测值的相关系数</span></span>
+<span id="cb87-431"><a href="#cb87-431" aria-hidden="true" tabindex="-1"></a>cv_cor <span class="ot">&lt;-</span> <span class="fu">cor</span>(test_data<span class="sc">$</span>stats_score, pred_cv)</span>
+<span id="cb87-432"><a href="#cb87-432" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-433"><a href="#cb87-433" aria-hidden="true" tabindex="-1"></a><span class="co"># 输出结果</span></span>
+<span id="cb87-434"><a href="#cb87-434" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"简单交叉验证结果</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb87-435"><a href="#cb87-435" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"真实值与预测值的相关系数 ="</span>, <span class="fu">round</span>(cv_cor, <span class="dv">4</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb87-436"><a href="#cb87-436" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-437"><a href="#cb87-437" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 双重交叉验证（交换样本，取两次相关系数的平均值）</span></span>
+<span id="cb87-438"><a href="#cb87-438" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb87-439"><a href="#cb87-439" aria-hidden="true" tabindex="-1"></a><span class="co"># 第一次：训练集1 → 测试集2（已算完：cv_cor）</span></span>
+<span id="cb87-440"><a href="#cb87-440" aria-hidden="true" tabindex="-1"></a><span class="co"># 第二次：交换 → 测试集1建模，训练集2预测</span></span>
+<span id="cb87-441"><a href="#cb87-441" aria-hidden="true" tabindex="-1"></a>fit_cv2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(stats_score <span class="sc">~</span> aptitude <span class="sc">+</span> math_base <span class="sc">+</span> study_hours <span class="sc">+</span> gender, <span class="at">data =</span> test_data)</span>
+<span id="cb87-442"><a href="#cb87-442" aria-hidden="true" tabindex="-1"></a>pred_cv2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit_cv2, <span class="at">newdata =</span> train_data)</span>
+<span id="cb87-443"><a href="#cb87-443" aria-hidden="true" tabindex="-1"></a>cv_cor2 <span class="ot">&lt;-</span> <span class="fu">cor</span>(train_data<span class="sc">$</span>stats_score, pred_cv2)</span>
+<span id="cb87-444"><a href="#cb87-444" aria-hidden="true" tabindex="-1"></a><span class="co"># 双重交叉验证平均值</span></span>
+<span id="cb87-445"><a href="#cb87-445" aria-hidden="true" tabindex="-1"></a>double_cv_cor <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">c</span>(cv_cor, cv_cor2))</span>
+<span id="cb87-446"><a href="#cb87-446" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-447"><a href="#cb87-447" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"双重交叉验证结果</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb87-448"><a href="#cb87-448" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"第一次相关系数 ="</span>, <span class="fu">round</span>(cv_cor, <span class="dv">4</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb87-449"><a href="#cb87-449" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"第二次相关系数 ="</span>, <span class="fu">round</span>(cv_cor2, <span class="dv">4</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb87-450"><a href="#cb87-450" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"双重交叉验证平均相关系数 ="</span>, <span class="fu">round</span>(double_cv_cor, <span class="dv">4</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb87-451"><a href="#cb87-451" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-452"><a href="#cb87-452" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. PRESS 统计量（留一法：每次剔除1个样本，预测该样本，计算残差平方和）</span></span>
+<span id="cb87-453"><a href="#cb87-453" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-454"><a href="#cb87-454" aria-hidden="true" tabindex="-1"></a>PRESS <span class="ot">&lt;-</span> <span class="fu">sum</span>((<span class="fu">residuals</span>(fit) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">hatvalues</span>(fit)))<span class="sc">^</span><span class="dv">2</span>)  <span class="co"># 留一法残差平方和</span></span>
+<span id="cb87-455"><a href="#cb87-455" aria-hidden="true" tabindex="-1"></a>SSY <span class="ot">&lt;-</span> <span class="fu">sum</span>((x_df<span class="sc">$</span>stats_score <span class="sc">-</span> <span class="fu">mean</span>(x_df<span class="sc">$</span>stats_score))<span class="sc">^</span><span class="dv">2</span>) <span class="co"># 总平方和</span></span>
+<span id="cb87-456"><a href="#cb87-456" aria-hidden="true" tabindex="-1"></a>press_R2 <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> PRESS <span class="sc">/</span> SSY  <span class="co"># PRESS 预测R²</span></span>
+<span id="cb87-457"><a href="#cb87-457" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-458"><a href="#cb87-458" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"PRESS 统计量结果</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb87-459"><a href="#cb87-459" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"PRESS 统计量（留一残差平方和） ="</span>, <span class="fu">round</span>(PRESS, <span class="dv">4</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb87-460"><a href="#cb87-460" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"PRESS 预测 R² ="</span>, <span class="fu">round</span>(press_R2, <span class="dv">4</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb87-461"><a href="#cb87-461" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/BAILIHAN14/Psych-Stats-R-2/edit/main/chapters/04-multiple-regression.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/BAILIHAN14/Psych-Stats-R-2/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
