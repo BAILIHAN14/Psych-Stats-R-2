@@ -101,7 +101,7 @@ quarto render
 
 ### 在线查看
 
-[![View HTML Document](https://img.shields.io/badge/View_Live-HTML-0072C6?style=for-the-badge&logo=html5)](https://bailihan14.github.io/Psych-Stats-R-2/PsychSta-2.html)
+[![View HTML Document](https://img.shields.io/badge/View_Live-HTML-0072C6?style=for-the-badge&logo=html5)](https://bailihan14.github.io/Psych-Stats-R-2/)
 
 ## 致谢
 -感谢26春心理统计2的李健老师;
