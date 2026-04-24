@@ -1,26 +1,23 @@
 # ============================================
-# 1. Quarto 渲染输出和缓存
+# 1. Quarto render output and cache
 # ============================================
-_book/           # 全书渲染后的HTML/PDF/EPUB输出目录
-_site/           # 网站模式渲染输出目录
-_quarto.yml      # 这是配置文件
-.freeze/         # 冻结计算的缓存文件
-.quarto/         # Quarto 内部工作缓存
+_book/
+_site/
+.freeze/
+.quarto/
 
 # ============================================
-# 2. R 会话临时文件
+# 2. R session temp files
 # ============================================
-.Rproj.user/     # RStudio 项目用户设置（窗口布局等）
-.Rhistory        # R 控制台历史命令
-.RData           # R 工作空间镜像文件
-.Rapp.history    # R.app 历史
-*.Rproj          # Rproj文件必须入库
-
+.Rproj.user/
+.Rhistory
+.RData
+.Rapp.history
 
 # ============================================
-# 3. R 包管理（如果使用 renv）
+# 3. R package management (renv)
 # ============================================
-renv/library/    # renv 私有包库
+renv/library/
 renv/local/
 renv/cellar/
 renv/lock/
@@ -29,7 +26,7 @@ renv/sandbox/
 renv/staging/
 
 # ============================================
-# 4. LaTeX / PDF 编译中间文件
+# 4. LaTeX / PDF intermediate files
 # ============================================
 *.aux
 *.bbl
@@ -45,40 +42,37 @@ renv/staging/
 *.lot
 
 # ============================================
-# 5. 操作系统生成的文件
+# 5. OS generated files
 # ============================================
-# macOS
 .DS_Store
 .AppleDouble
 .LSOverride
-# Windows
 Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
-# Linux
 .directory
 *~
 
 # ============================================
-# 6. 编辑器/IDE 配置
+# 6. Editor / IDE config
 # ============================================
-.vscode/        
-.idea/          
-*.swp           
-*.swo           
-*~              
+.vscode/
+.idea/
+*.swp
+*.swo
+
 # ============================================
-# 7. 敏感信息或环境变量
+# 7. Sensitive or env files
 # ============================================
-.env            
+.env
 *.htpasswd
 
 # ============================================
-# 8. 临时或生成的大文件
+# 8. Temp or generated large files
 # ============================================
-*.zip           
+*.zip
 *.tar.gz
-*.rds           
+*.rds
 *.feather
 *.parquet
