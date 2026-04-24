@@ -1,0 +1,230 @@
+---
+title: "PART3 Logistic Regression 逻辑回归"
+---
+
+```{r setup, include=FALSE}
+source(here::here("_common.R"))
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+::: rmdnote
+**什么是回归**
+
+回归是一种统计方法，用于分析一个因变量与一个或多个自变量之间的关系。它通过拟合模型（如直线）来预测因变量的变化趋势。最常见的线性回归可以描述变量间的线性依赖关系，并用于解释影响因素或进行数值预测。
+
+**什么是线性回归**
+
+线性回归是假设因变量与自变量之间存在直线关系的回归方法。它通过最小二乘法拟合线性方程 $Y = a + bX + e$，用于描述变量间的线性依赖关系，并利用自变量预测因变量的数值。例如，根据学习时间预测考试成绩。*适用于连续型因变量。*
+
+**什么是逻辑回归**
+
+逻辑回归是一种分类方法，用于因变量为二分类（如成功/失败）或多分类的情况。它通过逻辑函数（Sigmoid）将线性回归的输出映射到0到1的概率区间，从而预测事件发生的概率。例如，根据年龄、体重预测某人是否患病。与线性回归不同，*逻辑回归输出的是类别概率而非连续数值。*
+:::
+
+## 9.1Logistic Regression逻辑回归
+
+二元逻辑回归(BinaryLogisticRegression)\
+作用：针对二分类因变量(如患病\\不患病,事件发生\\不发生)构建回归模型,\
+核心目标是:①预测事件发生的*概率；*\
+②分析自变量对二分类结局的影响效应,解决线性回归无法处理二分类因变量的缺陷.\
+使用范围\
+因变量为二分类变量(服从伯努利分布,取值0\\1)；\
+自变量无类型限制,可同时纳入连续型,二分类,多分类变量；\
+适用于结局预测,危险因素识别,二分类模式识别场景,替代不适用的线性回归.\
+
+使用步骤\
+数据清洗:剔除异常值,缺失值,完成样本筛选；\
+分类自变量处理:对多分类自变量进行虚拟变量编码；\
+模型构建:基于logit变换构建模型,核心公式为: $$Logit\left(\operatorname{p}_i\right)=ln\left(\frac{\operatorname{p}_i}{1-\operatorname{p}_i}\right)=\alpha+\beta_1\operatorname{x}_1+\ldots+\beta_k\operatorname{x}_k$$ 参数估计:通过最大似然估计求解模型的截距α和回归系数β；\
+统计检验:对单个系数,模型整体进行显著性检验；\
+拟合评估:检验模型拟合优度,对比不同模型的拟合效果；\
+预测与解读:计算事件发生预测概率,通过OR值解读自变量的效应大小.\
+
+```{r Logistic-regression}
+# Logistic regression
+# 案例背景：研究影响员工是否离职的因素
+# 因变量：turnover（是否离职，0 = 在职，1 = 离职）
+# 自变量：
+#   age：年龄（连续，22-60岁）
+#   monthly_income：月收入（连续，单位千元，3-20k）
+#   job_satisfaction：工作满意度（有序整数，1=非常不满意，5=非常满意）
+#   overtime_hours：每周加班时长（连续，0-30小时）
+#   department：部门（分类：销售、技术、行政）
+# 加载readxl包(工具包)：用于读取Excel格式文件
+
+#library(readxl)
+
+# read_xlsx("..\data\excel_files\文件路径)：读取指定Excel文件，返回数据框并赋值给logisticData
+logisticData <- read_xlsx(here("data", "excel-files", "logistic_regression.xlsx"))
+
+# attach(数据框)：绑定数据框，可直接调用列名（无需数据框$列名，很适合偷懒（划掉）
+ln_yesno1 <- logisticData$turnover
+age1 <- logisticData$age
+pathsize1 <- logisticData$monthly_income
+pathscat1 <- logisticData$department
+
+
+# 筛选规则：剔除pathscat=99的异常样本，对所有变量做子集筛选
+# 向量[筛选条件]：保留满足条件的元素，生成新变量
+# 为保持代码结构一致，定义新变量名与原代码对应
+ln_yesno1 <- logisticData$turnover     # 二分类因变量（1=离职，0=在职）
+age1 <- logisticData$age               # 年龄（连续）
+pathsize1 <- logisticData$monthly_income # 月收入（连续，单位千元）
+pathscat1 <- logisticData$department   #分类自变量（部门：销售、技术、行政）
+
+
+#  分类变量哑变量编码 
+# ifelse(判断条件, 满足返回值, 不满足返回值)：对分类变量做二分类哑变量转换
+
+# 分类变量哑变量编码（以“行政”部门为参照）
+pathsCat1 <- ifelse(pathscat1 == "销售", 1, 0)   # 是否为销售部门
+pathsCat2 <- ifelse(pathscat1 == "技术", 1, 0)   # 是否为技术部门
+
+#拟合逻辑回归模型
+#glm(公式, family=分布类型)：广义线性模型拟合函数
+# 公式：因变量~自变量1+自变量2+...；family=binomial("logit")：指定逻辑回归模型
+fit1 <- glm(ln_yesno1 ~ age1 + pathsize1 + pathsCat1 + pathsCat2,family = binomial("logit"))
+
+
+# summary(模型对象)：输出模型详细结果（系数、标准误、p值、拟合优度等）
+summary(fit1) 
+
+#模型方差分析（卡方检验） 
+# anova(模型对象, test=检验方法)：对模型做方差分析，test="Chisq"指定卡方检验
+anova(fit1, test = "Chisq")
+
+# 效应量计算（优势比OR） 
+# exp()：对逻辑回归系数做指数转换，得到优势比(Odds Ratio)
+# cbind(列名=向量, 函数)：合并系数与置信区间为矩阵
+exp(cbind(OR = coef(fit1), confint(fit1)))
+
+#8. 回归系数的置信区间 
+# confint(模型对象)：计算回归系数的轮廓似然95%置信区间（默认方法）
+confint(fit1) 
+
+# confint.default(模型对象)：计算回归系数的正态近似95%置信区间
+confint.default(fit1)
+
+#  Wald检验（单独检验自变量显著性） 
+# 加载aod包(工具包)：用于执行Wald检验
+#library(aod)
+
+# wald.test(b=系数向量, Sigma=方差协方差矩阵, Terms=检验变量位置)：Wald检验函数
+# Terms=2:2：检验模型中第2个系数（age1）的显著性
+wald.test(b=coef(fit1),Sigma=vcov(fit1),Terms=2:2)
+
+# Pathsize变量的Wald检验结果 
+# Terms=3:3：检验模型中第3个系数（pathsize1）的显著性
+wald.test(b=coef(fit1),Sigma=vcov(fit1),Terms=3:3)
+```
+
+## 9.2 Model comparison模型比较
+
+### 9.2.1The nested hypothesis test嵌套假设检验
+
+\
+假设模型0（$M_0$)嵌套在1（$M_1$)中
+
+核心统计量定义 $$\Delta(y) = 2\ln L\left(\widehat{\theta}_1|y\right) - 2\ln L\left(\widehat{\theta}_0|y\right)$$
+
+渐近分布 $$\Delta(y) \text{ 渐近服从 } \chi^2_{n-m} \text{ 分布}$$
+
+决策规则 $$\text{若 } \Delta(y) > \chi^2_{n-m}(1-\alpha), \text{ 则拒绝 } M_0$$
+
+```{r nested-hypothesis-test}
+# 嵌套假设检验：用于比较嵌套逻辑回归模型的拟合优度
+
+# 手动计算：与零模型（仅截距）对比
+# with(模型对象, 计算表达式)
+with(fit1, null.deviance - deviance)  
+# 计算零模型偏差与当前模型偏差的差值，反映模型拟合提升量
+with(fit1, df.null - df.residual)  
+# 计算零模型自由度与残差自由度的差值，即检验的自由度
+with(fit1, pchisq(null.deviance - deviance, df.null - df.residual, lower.tail = FALSE))
+# pchisq(卡方统计量, 自由度, lower.tail)：计算卡方检验的P值；lower.tail=FALSE表示计算上侧尾概率
+
+
+# 似然比检验
+# glm(模型公式, family=分布)：拟合简化版逻辑回归模型（剔除pathsCat1、pathsCat2两个哑变量）
+fit2 <- glm(ln_yesno1 ~  age1 + pathsize1, family = binomial("logit"))
+# summary(模型对象)：输出简化逻辑回归模型的详细统计结果
+summary(fit2)
+# #library(包名)：加载lmtest工具包，用于执行似然比检验
+#library(lmtest)
+# lrtest(全模型, 简化模型)：对两个嵌套模型执行似然比检验，判断简化模型是否显著劣于全模型
+lrtest(fit1, fit2)
+
+
+# 特定模型两两比较
+# anova(模型1, 模型2, test=检验方法)：对两个嵌套模型进行方差分析，指定卡方检验统计量
+anova(fit1, fit2,test = "Chisq")
+```
+
+## 9.3 Test the model fitting检测模型的拟合程度
+
+分类预测变量的**虚拟变量（哑变量）**（Dummy variables for categorical predictors）
+
+伪决定系数（Pseudo r²，拟合优度指标）
+
+### 9.3.1 Hosmer and Lemeshow test
+
+是模型卡方检验的替代方法（通过总观测数进行标准化）。该检验会比较**观测频率（某一类别内的观测数量）与模型预测频率。若检验结果不显著**，说明模型拟合效果良好，与实际数据的差异无统计学意义。
+
+```{r  Hosmer-and-Lemeshow-test}
+# Hosmer and Lemeshow test
+
+# conduct the test
+#library(ResourceSelection)
+# hoslem.test(x=观测值, y=拟合值, g=分组数)：执行Hosmer-Lemeshow检验
+# x：实际观测的二分类因变量；y：模型预测的拟合概率值；g=10：将数据划分为10个组
+hoslem.test(x = ln_yesno1, y = fitted(fit1), g = 10) 
+
+```
+
+### 9.2.2 Psuedo r\^2 伪R\^2
+
+```{r Psuedo-r2}
+# Psuedo r^2
+
+
+# conduct the test
+#library(pscl)
+## r2CU is the Nagelkerke R^2; r2ML is the Cox&Snell R^2
+# pR2(模型对象)：计算逻辑回归的多种伪决定系数，参数为拟合完成的glm模型
+pR2(fit1)
+
+# log likelihood
+# logLik(模型对象)：计算模型的对数似然值，用于评估模型拟合优度
+logLik(fit1)
+```
+
+## 9.4 Prediction预测
+
+$$
+准确率 Accuracy=\frac{(TP+TN)}{(TP+TN+FP+FN)}
+$$
+
+$$
+精确率（阳性预测值）Precision=\frac{TP}{(TP+FP)}
+$$
+
+$$
+灵敏度Sensitivity=\frac{TP}{(TP+FN)}
+$$
+
+$$
+特异度Specificity=\frac{TN}{(TN+FP)}
+$$
+
+```{r Prediction}
+# Making Classification Table
+
+raw_x <- data.frame(age1,pathsize1,pathsCat1, pathsCat2);
+# predict(模型对象, newdata, type) 基于已拟合模型对新数据进行预测，
+#type="response" 返回事件发生的概率值
+pred_y <- predict(fit1,raw_x,type="response") 
+# data.frame(列名1 = 向量1, 列名2 = 向量2) 创建数据框，round(pred_y, 0) 将预测概率四舍五入为 0\1 分类结果
+classification_df = data.frame(observed_y = ln_yesno1, predicted_y = round(pred_y,0))
+# xtabs(公式, data) 根据公式生成列联表，~ observed_y + predicted_y 表示按观测值和预测值两个维度计数
+xtabs(~observed_y+predicted_y,data=classification_df)
+```

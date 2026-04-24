@@ -1,7 +1,7 @@
 # Psych-Stats-R-2 · 心理统计R语言教学文档
 
-![R](https://img.shields.io/badge/R-4.0%2B-blue) ![License]
-(https://img.shields.io/badge/License-MIT-green)
+![R](https://img.shields.io/badge/R-4.0%2B-blue) 
+![License](https://img.shields.io/badge/License-MIT-green)
 
 
 > 一份配合心理统计下的R交互式教学文档，持续更新维护中。之后我有时间会去做心理统计1的文档。
@@ -23,31 +23,43 @@
 
 ## 📊 数据来源说明
 
-- **多数课程上机示例数据（.sav）（.xlsx）**：来自课程助教老师们提供的上机材料，已获得助教老师们授权，可在本教学项目中公开使用。数据仅为教学示例，不代表实际情况。
-- **部分（.sav）**：由我使用 `set.seed()` 生成的教学用模拟数据。不代表实际情况。
-- **课程pdf截屏（.png）**：来自课程使用的ppt文件，已经获得授权，可以在本教学项目中公开使用。
+- **示例数据（.sav）（.xlsx）**：第一版的数据来自课程助教老师们提供的上机材料，已获得助教老师们授权，可在本教学项目中公开使用。但是在quarto生成的书籍中，所有的数据由我使用set.seed替换为模拟数据。所有数据仅为教学示例，不代表实际情况。
+
+- **课程pdf截屏（.png）**：来自课程使用的ppt文件，已经获得授权，可以在本教学项目中公开使用。出于多方面考虑，在quarto书籍中删除了所有的截图。
 
 ## 📁 目录结构
 
 ```markdown
 Psych-Stats-R-2/
-├── 📄 README.md # 项目说明文档
-├── 📄 .gitignore # Git 忽略规则
-├── 📂 docs/ # 生成的文档和图片
-│ ├── 📄 PsychSta-2-demo.html # 主要HTML文档
-│ └── 📂 images/ # 所有图表图片
-├── 📂 data/ # 原始数据文件
-│ ├── 📂 sav_files/ # SPSS .sav 文件
-│ └── 📂 excel_files/ # Excel 文件
-├── 📂 src/ # 源代码
-│ └── 📄 PsychSta-2-demo.Rmd # R Markdown 源文件
+├── 📄 _quarto.yml              # 🔧 项目核心配置：定义书籍结构、输出格式、GitHub Pages
+├── 📄 _common.R                # 🛠️ R 包统一管理：所有章节共享的包加载和环境设置
+├── 📄 index.qmd                # 🏠 在线书籍的首页（项目概览、导航）
+├── 📄 intro.qmd                # 📖 引言/序言（可选）
+├── 📄 summary.qmd              # 🏁 总结与展望
+├── 📄 references.qmd           # 📚 参考文献页面
+├── 📄 references.bib           # 📚 BibTeX 格式的参考文献库文件
+├── 📄 cover.png                # 🎨 书籍封面图片
+├── 📄 psych-stats-book.Rproj   # 📌 RStudio 项目文件，一键打开项目
+├── 📄 .gitignore               # 忽略规则
+├── 📄 README.md                # 📄 项目说明文档
+├── 📂 chapters/                # ✍️ 核心内容章节（.qmd 源文件）
+│   ├── 📄 01-non-parametric-test.qmd
+│   ├── 📄 02-anova.qmd
+│   ├── 📄 03-logistic-regression.qmd
+│   └── 📄 04-multiple-regression.qmd
+├── 📂 data/                    # 📊 所有原始数据
+│   ├── 📂 sav_files/           #   SPSS 格式 (.sav) 文件
+│   └── 📂 excel_files/         #   Excel 格式 (.xlsx) 文件
+├── 📂 images/                  # 🖼️ 图片资源
+├── 📂 src/                     # ⚙️ 辅助脚本
+└── 📂 _book/                   # 🚀 书籍渲染输出
 ```
 ## 🚀 如何使用
 
 ### 环境要求
 - R (≥ 4.0)
 - RStudio（推荐）
-- 部分R包（已经在.rmd文件中展示）
+- 部分R包（已经在_common.R文件中展示）
 
 
 ### 文件组成
@@ -70,8 +82,11 @@ Psych-Stats-R-2/
 [![View HTML Document](https://img.shields.io/badge/View_Live-HTML-0072C6?style=for-the-badge&logo=html5)](https://bailihan14.github.io/Psych-Stats-R-2/PsychSta-2.html)
 
 ## 致谢
-感谢26春心理统计2的李健老师;感谢2026春-心理统计2-三教403的助教老师们，他们为我提供了宝贵的参考数据，尤其感谢张嘉欣助教老师，她解答了我整理文档时面临的困惑；感谢deepseek，没它我学不会git,latex,r还有各种各样的小玩意;感谢江一平同学，没他的提醒我会忘了收拾仓库。
-尤其感谢我的小电脑，没它就没有这一切。
+-感谢26春心理统计2的李健老师;
+-感谢2026春-心理统计2-三教403的助教老师们，他们为我提供了宝贵的参考数据，尤其感谢张嘉欣助教老师，她解答了我整理文档时面临的困惑；
+-感谢deepseek，没它我学不会git,latex,r还有各种各样的小玩意;
+-感谢江一平同学，没他的提醒我会忘了收拾仓库。
+-尤其感谢我的小电脑，没它就没有这一切。
 
 ## 👤 作者
 ```markdown

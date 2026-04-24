@@ -1,0 +1,42 @@
+project:
+  type: book
+
+book:
+  title: "Psych-Statistics: A Practical Guide for Data Analysis"
+  author: "Alieen"
+  date: "2026-04-22"
+  chapters:
+    - index.qmd
+    - chapters/01-non-parametric-test.qmd
+    - chapters/02-anova.qmd
+    - chapters/03-logistic-regression.qmd
+    - chapters/04-multiple-regression.qmd
+    - summary.qmd
+    - references.qmd
+  search: true
+  downloads: [pdf, epub]
+  sharing: [twitter, facebook, linkedin]
+  repo-url: "https://github.com/BAILIHAN14/Psych-Stats-R-2"
+  repo-actions: [edit, issue]
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: 
+      light: cosmo
+      dark: darkly
+    number-sections: false
+    toc: true
+    toc-depth: 3
+    code-fold: false
+    code-tools: true
+    code-link: true
+    highlight-style: tango
+    df-print: paged
+#  pdf:
+    #documentclass: scrreprt
+    #number-sections: false
+    #include-in-header:
+     # text: |
+      #  \usepackage{ctex}

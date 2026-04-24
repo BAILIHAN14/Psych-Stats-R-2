@@ -1,205 +1,87 @@
-# ================================
-# 本 .gitignore 文件的作用：
-# 只忽略临时文件、缓存、日志、系统垃圾等。
-# 重要文件（.Rmd .html .png .xlsx .sav）不会被忽略。
-# ================================
+# ============================================
+# 1. Quarto 渲染输出和缓存
+# ============================================
+_book/           # 全书渲染后的HTML/PDF/EPUB输出目录，由CI或本地发布，不入库
+_site/           # 网站模式渲染输出目录
+_quarto.yml      # 这是配置文件
+.freeze/         
+.quarto/         
 
-# ========== R / RStudio 相关 ==========
-# R/RStudio 临时文件
-.Rhistory
-.RData
-.Rproj.user/
-.Rproj
-.Ruserdata
+# ============================================
+# 2. R 会话临时文件
+# ============================================
+.Rproj.user/     # RStudio 项目用户
+.Rhistory        # R 控制台历史命令
+.RData           # R 工作空间镜像文件
+.Rapp.history    # R.app 历史
+*.Rproj          # Rproj文件
 
-# 缓存和临时文件
-*.Rcache
-*.Rcheck
-*.Rproj.user
-*.Rproj
-*.Rhistory
-*.RData
+# *.Rproj
 
-# IDE 配置文件
-.vscode/
-.idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# ============================================
+# 3. R 包管理
+# ============================================
+renv/library/    
+renv/local/
+renv/cellar/
+renv/lock/
+renv/python/
+renv/sandbox/
+renv/staging/
 
-# 操作系统文件
-.DS_Store
-Thumbs.db
+# ============================================
+# 4. LaTeX / PDF 编译中间文件
+# ============================================
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.xdv
+*.toc
+*.lof
+*.lot
 
-# 编译生成的文件
-*.o
-*.so
-*.dll
-
-# 其他临时文件
-cache/
-figure/
-autosave/
-*.bak
-*.tmp
-# ========== R Markdown / 编译输出 ==========
-# 注意：.Rmd 和 .html 是重要文件，不会被忽略！
-# 但编译时产生的中间文件需要忽略。
-
-# Rmd 编译时产生的临时文件夹
-_cache/
-_figure/
-_files/
-_site/
-
-# Bookdown 相关临时文件
-_bookdown_files/
-_bookdown.yml
-
-# blogdown 相关
-/public/
-/static/
-
-# ========== Python（如果混用） ==========
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python/
-pip-log.txt
-pip-delete-this-directory.txt
-.eggs/
-*.egg-info/
-*.egg
-
-# ========== Jupyter Notebook（如果有） ==========
-.ipynb_checkpoints/
-*.ipynb
-
-# ========== 版本控制 / Git 相关 ==========
-
-
-# 忽略 Git 补丁文件
-*.patch
-*.diff
-
-# ========== 编辑器 / IDE 相关 ==========
-# VS Code
-.vscode/
-*.code-workspace
-
-# Visual Studio
-.vs/
-*.suo
-*.user
-
-# RStudio（上面已经有了，补充一些）
-.Rproj.user/
-.Rproj.d/
-
-# Sublime Text
-*.sublime-project
-*.sublime-workspace
-
-# Vim / Neovim
-*.swp
-*.swo
-*~
-.*.swp
-.*.swo
-
-# Emacs
-*~
-\#*\#
-.\#*
-
-# JetBrains (R语言插件等)
-.idea/
-*.iml
-
-# ========== 操作系统垃圾文件 ==========
-# Windows
-Thumbs.db
-Thumbs.db:encryptable
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-*.cab
-*.lnk
-
+# ============================================
+# 5. 操作系统生成的文件
+# ============================================
 # macOS
 .DS_Store
 .AppleDouble
 .LSOverride
-._*
-.Spotlight-V100
-.Trashes
-.fseventsd
-.AppleDB
-.AppleDesktop
-
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
 # Linux
-*~
 .directory
-.dovecot*
-*.pid
-*.lock
+*~
 
-# ========== 日志 / 临时文件 ==========
-*.log
-*.tmp
-*.temp
-*.cache
-*.bak
-*.backup
-*.old
-*.orig
-*.rej
+# ============================================
+# 6. 编辑器/IDE 配置
+# ============================================
+.vscode/         # VS Code 设置（除非你要共享工作区配置，否则忽略）
+.idea/           # JetBrains 系列 IDE（如 RStudio 外的 PyCharm 等）
+*.swp            # Vim 交换文件
+*.swo            # Vim 未保存文件
+*~               # Emacs 备份文件
 
-# ========== 数据文件（只忽略某些不重要的临时数据） ==========
+# ============================================
+# 7. 敏感信息或环境变量
+# ============================================
+.env             # API密钥等
+*.htpasswd
 
+# ============================================
+# 8. 临时或生成的大文件
+# ============================================
+*.zip            # 除非你是故意上传的数据集zip
+*.tar.gz
+*.rds            # 如果你单独生成过R二进制大文件，可以忽略，否则自己决定
 *.feather
 *.parquet
-*.rds
-*.rda
-*.Rds
-
-# Excel 临时文件
-~$*.xlsx
-~$*.xls
-
-# 压缩包临时文件
-*.zip
-*.7z
-*.rar
-*.gz
-*.bz2
-*.xz
-
-# ========== 输出目录==========
-
-# output/
-temp/
-tmp/
-
-# ========== 其它 ==========
-# 网络缓存
-.cache/
-.mypy_cache/
-
-# 数据库文件
-*.db
-*.sqlite
-*.sqlite3
-
-# Docker 相关
-Dockerfile
-.dockerignore
-*.docker
-
-# 环境变量文件
-.env
-.env.*
-*.secret
+# 注意：data/ 和 images/ 目录不应被整体忽略，它们是项目所需资源
