@@ -23,7 +23,7 @@
 
 ## 📊 数据来源说明
 
-- **示例数据（.sav）（.xlsx）**：第一版的数据来自课程助教老师们提供的上机材料，已获得助教老师们授权，可在本教学项目中公开使用。但是在quarto生成的书籍中，所有的数据由我使用set.seed替换为模拟数据。所有数据仅为教学示例，不代表实际情况。
+- **示例数据（.sav/.xlsx）**：第一版的数据来自课程助教老师们提供的上机材料，已获得助教老师们授权，可在本教学项目中公开使用。但是在quarto生成的书籍中，所有的数据由我使用set.seed替换为模拟数据。所有数据仅为教学示例，不代表实际情况。
 
 - **课程pdf截屏（.png）**：来自课程使用的ppt文件，已经获得授权，可以在本教学项目中公开使用。出于多方面考虑，在quarto书籍中删除了所有的截图。
 
@@ -54,20 +54,42 @@ Psych-Stats-R-2/
 ├── 📂 src/                     # ⚙️ 辅助脚本
 └── 📂 _book/                   # 🚀 书籍渲染输出
 ```
-## 🚀 如何使用
 
-### 环境要求
+## 🚀 快速开始
+
+### 1. 在线浏览（无需安装任何东西）
+
+👉 **[点击这里阅读在线书籍](https://bailihan14.github.io/Psych-Stats-R-2/)**
+
+支持左侧导航目录、全文搜索、代码一键复制、PDF/EPUB 下载。
+
+### 2. 本地运行
+
+**环境要求：**
 - R (≥ 4.0)
 - RStudio（推荐）
-- 部分R包（已经在_common.R文件中展示）
 
+**步骤：**
+```bash
+# 1. 克隆仓库
+git clone https://github.com/BAILIHAN14/Psych-Stats-R-2.git
+cd Psych-Stats-R-2
 
-### 文件组成
-- PsychSta-2.Rmd为主要的文件，请使用Rstudio打开。默认以visual模式打开，切换到source可能会导致排版错乱。内容涵盖了统计学方法、r语言函数等内容。有可以运行的r的代码块，可以自行修改参数等内容。运行代码块前请清空工作台。有大纲分类，但排版可能会相对的简陋。
-- PsychSta-2.html 为.html格式文件，内容与.Rmd文件内容一致。排版更加清晰美观，添加了可以自动跳转的目录，也可以查看现成的运行结果。
-- 其余的文件为.Rmd运行所需要的文件。
+# 2. 在 RStudio 中打开 psych-stats-book.Rproj
 
+# 3. 安装依赖包（首次运行需要）
+# 打开 R Console，运行：
+# install.packages(c("here","haven","readxl","car","DescTools",
+#   "rstatix","tidyverse","bruceR","psych","lme4","lmerTest",
+#   "emmeans","effectsize","HH","irr","agricolae","ggplot2",
+#   "gridExtra","ppcor","aod","lmtest","ResourceSelection",
+#   "pscl","multcomp","mvnormtest","heplots","BSDA"))
 
+# 4. 渲染全书
+# 在 RStudio Terminal 中运行：
+quarto render
+```
+渲染完成后，在项目根目录下的 _book/ 文件夹中找到 index.html 打开即可。
 
 ### 本地运行
 
