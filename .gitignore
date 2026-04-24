@@ -29,6 +29,7 @@ renv/python/
 renv/sandbox/
 renv/staging/
 
+<<<<<<< HEAD
 # ============================================
 # 4. LaTeX / PDF 编译中间文件
 # ============================================
@@ -44,6 +45,106 @@ renv/staging/
 *.toc
 *.lof
 *.lot
+=======
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# 编译生成的文件
+*.o
+*.so
+*.dll
+
+# 其他临时文件
+cache/
+figure/
+autosave/
+*.bak
+*.tmp
+# ========== R Markdown / 编译输出 ==========
+
+
+# Rmd 编译时产生的临时文件夹
+_cache/
+_figure/
+_files/
+_site/
+
+# Bookdown 相关临时文件
+_bookdown_files/
+_bookdown.yml
+
+# blogdown 相关
+/public/
+/static/
+
+# ========== Python（如果混用） ==========
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python/
+pip-log.txt
+pip-delete-this-directory.txt
+.eggs/
+*.egg-info/
+*.egg
+
+# ========== Jupyter Notebook（如果我将来要做）==========
+.ipynb_checkpoints/
+*.ipynb
+
+# ========== 版本控制 / Git 相关 ==========
+
+
+# 忽略 Git 补丁文件
+*.patch
+*.diff
+
+# ========== 编辑器 / IDE 相关 ==========
+# VS Code
+.vscode/
+*.code-workspace
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+
+# RStudio（上面已经有了，补充一些）
+.Rproj.user/
+.Rproj.d/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim / Neovim
+*.swp
+*.swo
+*~
+.*.swp
+.*.swo
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# JetBrains (R语言插件等)
+.idea/
+*.iml
+
+# ========== 操作系统垃圾文件 ==========
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.lnk
+>>>>>>> cd289b77ba3fe6b8c6003af37f3ca889fac18fbc
 
 # ============================================
 # 5. 操作系统生成的文件
@@ -84,4 +185,49 @@ $RECYCLE.BIN/
 *.rds            # 如果你单独生成过R二进制大文件，可以忽略，否则自己决定
 *.feather
 *.parquet
+<<<<<<< HEAD
 # 注意：data/ 和 images/ 目录不应被整体忽略，它们是项目所需资源
+=======
+*.rds
+*.rda
+*.Rds
+
+# Excel 临时文件
+~$*.xlsx
+~$*.xls
+
+# 压缩包临时文件
+*.zip
+*.7z
+*.rar
+*.gz
+*.bz2
+*.xz
+
+# ========== 输出目录==========
+
+# output/
+temp/
+tmp/
+
+# ========== 其它 ==========
+# 网络缓存
+.cache/
+.mypy_cache/
+
+# 数据库文件
+*.db
+*.sqlite
+*.sqlite3
+
+# Docker 相关
+Dockerfile
+.dockerignore
+*.docker
+
+# 环境变量文件
+.env
+.env.*
+*.secret
+
+>>>>>>> cd289b77ba3fe6b8c6003af37f3ca889fac18fbc
